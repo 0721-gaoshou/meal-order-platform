@@ -16,13 +16,13 @@ Page({
       .then((data) => {
         this.setData({
           checking: false,
-          healthText: '✅ 后端连通：' + data.service + ' · ' + data.time,
+          healthText: '后端连通：' + data.service + ' · ' + data.time,
         })
       })
       .catch(() => {
         this.setData({
           checking: false,
-          healthText: '❌ 后端不可达，请先启动 backend 服务',
+          healthText: '后端不可达，请先启动 backend 服务',
         })
       })
   },
