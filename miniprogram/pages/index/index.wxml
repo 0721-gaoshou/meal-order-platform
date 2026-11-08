@@ -1,7 +1,10 @@
 <!--index.wxml-->
-<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<navigation-bar title="点餐平台" back="{{false}}" color="black" background="#FFF"></navigation-bar>
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
-    Weixin
+    <button type="primary" size="default" loading="{{checking}}" bindtap="onTapHealth">
+      健康检查（M0 验收）
+    </button>
+    <view class="health-result">{{healthText}}</view>
   </view>
 </scroll-view>
