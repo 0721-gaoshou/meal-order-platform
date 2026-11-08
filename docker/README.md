@@ -29,7 +29,7 @@ sudo service docker restart
 | MySQL 8.0 | 3306 | root / meal_root_2026，默认库 `meal_order`，utf8mb4 |
 | Redis 7.2 | 6379 | 无密码（本地开发） |
 | RabbitMQ | 5672 / 15672 | guest / guest，控制台 http://localhost:15672 |
-| MinIO | 9000 / 9001 | mealadmin / mealadmin123，控制台 http://localhost:9001 |
+| RustFS（S3 兼容对象存储） | 9000 | mealadmin / mealadmin123；控制台暂不可用（上游 bug），建桶走后端代码或 mc 客户端 |
 
 ## 与 Dify 共存
 
