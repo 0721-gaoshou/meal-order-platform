@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
-
-// M0 期间不强制登录，方便端到端验收；M1 接入 JWT 后改为 true
-const REQUIRE_AUTH = false
+import { ElMessage } from 'element-plus'
+import { useUserStore } from '@/stores/user'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -22,6 +21,18 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/Dashboard.vue'),
         meta: { title: '仪表盘' },
       },
+      {
+        path: 'goods',
+        name: 'goods',
+        component: () => import('@/views/goods/GoodsList.vue'),
+        meta: { title: '商品列表', roles: ['ADMIN', 'MERCHANT'] },
+      },
+      {
+        path: 'categories',
+        name: 'categories',
+        component: () => import('@/views/goods/CategoryManage.vue'),
+        meta: { title: '分类管理', roles: ['ADMIN'] },
+      },
     ],
   },
   { path: '/:pathMatch(.*)*', redirect: '/dashboard' },
@@ -33,10 +44,19 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  if (!REQUIRE_AUTH) return true
-  const token = localStorage.getItem('token')
-  if (to.path !== '/login' && !token) return { path: '/login' }
-  if (to.path === '/login' && token) return { path: '/dashboard' }
+  const user = useUserStore()
+  if (to.path !== '/login' && !user.isLoggedIn) {
+    return { path: '/login' }
+  }
+  if (to.path === '/login' && user.isLoggedIn) {
+    return { path: '/dashboard' }
+  }
+  // RBAC：路由 meta.roles 与用户角色比对，无权回仪表盘
+  const roles = to.meta.roles as string[] | undefined
+  if (roles && roles.length > 0 && !user.hasRole(...roles)) {
+    ElMessage.warning('无权访问该页面')
+    return { path: '/dashboard' }
+  }
   return true
 })
 

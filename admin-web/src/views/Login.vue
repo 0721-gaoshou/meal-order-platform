@@ -23,7 +23,7 @@ async function submit() {
     await user.login(form.username, form.password)
     router.push('/dashboard')
   } catch {
-    // 错误提示已由 request 拦截器统一弹出；登录接口在 M1 实现
+    // 错误提示已由 request 拦截器统一弹出
   } finally {
     loading.value = false
   }
@@ -34,7 +34,7 @@ async function submit() {
   <div class="login-page">
     <el-card class="login-card">
       <h2 class="title">🍜 本地生活点餐平台</h2>
-      <p class="subtitle">管理端 · M0 骨架（登录接口 M1 接入）</p>
+      <p class="subtitle">管理端 · 本地生活点餐与优惠券平台</p>
       <el-form ref="formRef" :model="form" :rules="rules" size="large" @keyup.enter="submit">
         <el-form-item prop="username">
           <el-input v-model="form.username" placeholder="用户名" />
