@@ -5,8 +5,8 @@ import { useUserStore } from '@/stores/user'
 const user = useUserStore()
 const router = useRouter()
 
-function handleLogout() {
-  user.logout()
+async function handleLogout() {
+  await user.logout()
   router.push('/login')
 }
 </script>
@@ -25,9 +25,13 @@ function handleLogout() {
         <el-menu-item index="/dashboard">
           <el-icon><Odometer /></el-icon>仪表盘
         </el-menu-item>
-        <el-menu-item disabled>
-          <el-icon><Goods /></el-icon>商品管理（M1）
-        </el-menu-item>
+        <el-sub-menu index="goods-menu">
+          <template #title>
+            <el-icon><Goods /></el-icon>商品管理
+          </template>
+          <el-menu-item index="/goods">商品列表</el-menu-item>
+          <el-menu-item v-if="user.isAdmin" index="/categories">分类管理</el-menu-item>
+        </el-sub-menu>
         <el-menu-item disabled>
           <el-icon><Tickets /></el-icon>订单管理（M2）
         </el-menu-item>
