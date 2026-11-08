@@ -99,8 +99,25 @@ admin-web/src/assets/
 ```
 
 - 命名：kebab-case + 前缀（`logo-` `banner-` `cat-` `empty-` `tab-`），倍图 `@2x`
-- AI 原图（4K）**不入库**：存 `E:\作业\素材\原图\<日期>\`，缩放压缩到 ≤100KB 再进工程
+- AI 原图（4K）**不入库**：缩放压缩到 ≤100KB 再进工程
 - 小程序单包 ≤2MB：图片必须压缩（TinyPNG / squoosh.app）
+
+### 本机素材工作区（约定，不入 Git）
+
+```
+E:\下载\                     ← SVG 素材库：iconfont 下载的 SVG 统一放这里（根目录）
+E:\下载\素材\svg2png.mjs     ← SVG→PNG 批量转换工具（Node + Edge 无头渲染，透明背景/调色）
+E:\下载\素材\preview\        ← 调色预览产物
+E:\下载\素材\原图\<日期>\    ← AI 生成 4K 原图暂存
+```
+
+转换命令示例：
+
+```bash
+node E:\下载\素材\svg2png.mjs E:\下载 miniprogram/images/tabbar --size 81 --color dark=#1F1F1F --color yellow=#FFC300
+```
+
+工程里只进压缩后的成品 PNG，SVG 与原图留在本机素材区。
 
 ## 7. 落地清单
 
