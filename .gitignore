@@ -1,0 +1,36 @@
+# ===== Java / Maven =====
+backend/target/
+*.class
+*.jar
+!**/maven-wrapper.jar
+*.war
+*.iml
+
+# ===== Node / 前端 =====
+node_modules/
+dist/
+.npm/
+
+# ===== 微信小程序 =====
+project.private.config.json
+
+# ===== IDE =====
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== 本地运行时 / 凭证（只留 example） =====
+.env
+.env.*
+!.env.example
+application-local.yml
+logs/
+*.log
+
+# ===== 临时 / 工具 =====
+tmp/
+*.tmp
+~$*
+.zcode/
