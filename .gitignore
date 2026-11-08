@@ -34,3 +34,4 @@ tmp/
 *.tmp
 ~$*
 .zcode/
+/交接文档.md
