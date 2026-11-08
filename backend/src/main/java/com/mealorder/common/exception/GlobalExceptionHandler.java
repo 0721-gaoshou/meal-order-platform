@@ -4,11 +4,13 @@ import com.mealorder.common.result.R;
 import com.mealorder.common.result.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.stream.Collectors;
 
@@ -51,6 +53,20 @@ public class GlobalExceptionHandler {
     public R<Void> handleNotReadable(HttpMessageNotReadableException e) {
         log.warn("请求体不可读: {}", e.getMessage());
         return R.fail(ResultCode.PARAM_ERROR, "请求体格式错误");
+    }
+
+    /** 404：路径不存在（Spring 6.1+ 静态资源未命中抛出） */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public R<Void> handleNotFound(NoResourceFoundException e) {
+        log.warn("资源不存在: {}", e.getResourcePath());
+        return R.fail(ResultCode.NOT_FOUND);
+    }
+
+    /** 上传文件超过 multipart 限制 */
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public R<Void> handleMaxUpload(MaxUploadSizeExceededException e) {
+        log.warn("上传文件过大: {}", e.getMessage());
+        return R.fail(ResultCode.PARAM_ERROR, "图片不能超过 5MB");
     }
 
     /** 兜底：未预期异常，error 日志，不向前端泄露堆栈 */

@@ -11,6 +11,11 @@ spring:
     url: jdbc:mysql://localhost:3306/meal_order?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: root123
+  servlet:
+    multipart:
+      # 商品图片上传限制；RustFS 单图 5MB 足够
+      max-file-size: 5MB
+      max-request-size: 20MB
 
 mybatis-plus:
   configuration:
@@ -19,6 +24,13 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     banner: false
+    db-config:
+      # 全库主键走雪花 ID，与 schema.sql 约定一致（见 docs/数据库设计.md 决策 1）
+      id-type: assign_id
+      # 逻辑删除统一字段：spu/sku/category 的 deleted
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
 
 knife4j:
   enable: true
@@ -28,3 +40,19 @@ knife4j:
 springdoc:
   api-docs:
     enabled: true
+
+# JWT 双 token（开发期密钥直接写配置，M9 部署改 .env 注入）
+jwt:
+  secret: meal-order-dev-secret-key-please-change-in-prod-0123456789
+  issuer: meal-order
+  access-ttl-hours: 2
+  refresh-ttl-days: 7
+
+# RustFS（S3 兼容对象存储），容器见 docker/docker-compose.yml
+rustfs:
+  endpoint: http://localhost:9000
+  access-key: mealadmin
+  secret-key: mealadmin123
+  bucket: meal-goods
+  # 返回给前端的图片访问地址前缀（桶为 public-read）
+  public-url: http://localhost:9000/meal-goods
