@@ -1,8 +1,11 @@
 package com.mealorder.common.result;
 
+import lombok.Getter;
+
 /**
  * 业务错误码分段：A 参数 / B 认证权限 / C 业务 / D 系统
  */
+@Getter
 public enum ResultCode {
 
     SUCCESS("00000", "成功"),
@@ -27,11 +30,4 @@ public enum ResultCode {
         this.message = message;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 }

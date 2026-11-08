@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
         return R.fail(e.getCode(), e.getMessage());
     }
 
-    /** @RequestBody 上的 @Valid 校验失败 */
+    /** &#064;RequestBody  上的 @Valid 校验失败 */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public R<Void> handleValid(MethodArgumentNotValidException e) {
         String detail = e.getBindingResult().getFieldErrors().stream()

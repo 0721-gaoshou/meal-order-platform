@@ -1,5 +1,7 @@
 package com.mealorder.common.result;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 
 /**
@@ -7,6 +9,7 @@ import java.io.Serializable;
  * code 分段：00000 成功 / Axxxx 参数 / Bxxxx 认证权限 / Cxxxx 业务 / Dxxxx 系统
  * 见 docs/api-convention.md 与项目计划书 §4.11
  */
+@Getter
 public class R<T> implements Serializable {
 
     private final String code;
@@ -39,15 +42,4 @@ public class R<T> implements Serializable {
         return new R<>(code, message, null);
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public T getData() {
-        return data;
-    }
 }
