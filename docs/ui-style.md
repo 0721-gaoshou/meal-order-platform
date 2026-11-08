@@ -1,116 +1,110 @@
-# UI 美术风格与 AI 素材提示词库
+# UI 美术风格与素材规范（对齐美团风格 · iconfont 图标体系）
 
-> 用法：把「风格母版」拼在每条提示词最前面再生成，保证全套素材风格一致。
-> 工具适配：中文提示词适配即梦/通义万相/豆包；英文适配 Midjourney/Stable Diffusion（SD 需配负面词）。
+> 视觉基准：美团 App 黄色系电商风。图标一律走 [iconfont.cn](https://www.iconfont.cn/)，AI 生图只负责插画/banner/占位图。
+> 工具适配：中文提示词适配即梦/通义万相/豆包；英文适配 Midjourney/Stable Diffusion。
 
 ## 1. 风格定位
 
-| 端 | 风格 | 原因 |
+| 端 | 风格 | 要点 |
 |---|---|---|
-| 用户端小程序（C端） | **3D 黏土美食风**（图标/装饰）+ 暖橙色调 | 餐饮行业经典心智色，圆润有食欲，区分度高 |
-| 管理端（B端） | **扁平几何插画 + 大量留白**，克制用色 | 数据密集型界面，装饰只出现在登录页和空状态 |
+| 用户端小程序（C端） | **美团式黄色电商风**：明黄主色 + 白底大圆角卡片 + 高密度信息流 + 面性图标 | 黄底黑字按钮是灵魂；列表左图右文；价格大号橙红强调 |
+| 管理端（B端） | Element Plus **默认蓝色不覆盖**，保持克制 | B端专业感来自留白和对齐；品牌黄只做点缀（logo、强调标签） |
 
-## 2. 统一色板与字体
+## 2. 色板
 
 | 用途 | 色值 |
 |---|---|
-| 主色（品牌橙） | `#FF6B00` |
-| 辅助黄 | `#FFC53D` |
-| 促销红 / 成功绿 / 链接蓝 | `#FF4D4F` / `#52C41A` / `#1677FF` |
-| 背景 / 卡片 | `#F5F7FA` / `#FFFFFF` |
-| 正文 / 次要文字 | `#1F2937` / `#6B7280` |
+| 主色（美团黄） | `#FFC300` |
+| 按钮黄底上的文字 | `#1F1F1F`（黑字，黄底白字对比度不够是新手常见错） |
+| 促销/价格强调 | `#FF4D2E` |
+| 成功 / 链接 | `#52C41A` / `#1677FF` |
+| 页面背景 / 卡片 | `#F5F5F7` / `#FFFFFF` |
+| 主文字 / 次要文字 / 分割线 | `#1F1F1F` / `#6B7280` / `#EEEEEE` |
+| 卡片圆角 / 阴影 | 16–24rpx / `0 2rpx 12rpx rgba(0,0,0,0.04)` 微阴影 |
 
-字体：小程序默认系统字体；管理端标题用默认字体加粗即可，**不要引入额外字体包**。
+## 3. AI 风格母版（生成插画/banner 时拼在提示词最前面）
 
-## 3. 风格母版（每条提示词的前缀）
-
-**母版 C（C端黏土风，用于图标/banner 装饰）**
+**母版 C（C端插画/banner）**
 ```
-中文：3D黏土渲染风格，圆润卡通造型，柔和摄影棚光影，暖橙色系配色，白色干净背景，居中构图，C4D质感，电商App视觉风格，高细节
-EN  : 3D clay render style, cute rounded cartoon shape, soft studio lighting, warm orange color palette, clean white background, centered composition, C4D quality, e-commerce app visual style, high detail
-```
-
-**母版 B（B端扁平插画，用于登录页/空状态）**
-```
-中文：扁平几何插画，圆润造型，橙色与奶油色配色，极简现代商务风，干净纯色背景，构图留白充足
-EN  : flat geometric illustration, rounded shapes, orange and cream color palette, minimal modern business style, clean solid background, generous white space
+中文：扁平插画风格，明黄色系(#FFC300)与白色配色，圆润卡通造型，柔和光影，干净背景，构图留白充足，电商App视觉风格
+EN  : flat illustration style, bright yellow (#FFC300) and white color scheme, rounded cartoon shapes, soft lighting, clean background, generous white space, e-commerce app visual style
 ```
 
-**通用负面提示（SD 系）**
+**母版 B（B端登录页/空状态）**
 ```
-text, watermark, logo text, blurry, low quality, distorted, realistic photo, human face, extra limbs
+中文：扁平几何插画，圆润造型，黄色与深灰点缀配色，极简现代商务风，干净纯色背景
+EN  : flat geometric illustration, rounded shapes, yellow accents on light gray, minimal modern business style, clean solid background
 ```
 
-## 4. 资产清单与提示词
+**通用负面提示（SD 系）**：`text, watermark, blurry, low quality, distorted, realistic photo, human face`
 
-### A1 品牌 Logo（图形部分；文字用设计字体拼，AI 生文字必翻车）
-- 尺寸 512×512，白底 PNG → 后期抠透明
-- 母版 C + 「一只碗与一双筷子的极简图形标志，单色橙色，圆形徽标构图，无文字」
-- EN: minimal emblem logo of a bowl and chopsticks, single orange color, circular badge composition, no text
+## 4. 素材清单
 
-### A2 管理端登录页插画（16:9 横幅，1200×800 起）
-- 母版 B + 「餐厅经营场景：厨师托着餐盘，旁边漂浮订单卡片和数据图表元素，现代餐厅内景，横向构图」
-- EN: restaurant operations scene, chef holding a tray with floating order cards and chart elements, modern restaurant interior, wide composition
+### A1 品牌 Logo（图形部分；文字用设计字体拼）
+- 512×512 白底 PNG；母版 C + 「一只碗与一双筷子的极简图形标志，单色黄色 #FFC300，圆形徽标构图，无文字」
 
-### A3 小程序首页 Banner 背景（1500×560，含留白供排版）
-- 母版 C + 「俯拍木质餐桌美食场景，边缘布置食物元素，中央大面积留白用于标题文字，横幅构图」
-- EN: top-down wooden table food scene, food elements placed at edges, large empty center area for title text, banner composition
+### A2 管理端登录页插画（1200×800，16:9）
+- 母版 B + 「餐厅经营场景：厨师托餐盘与订单卡片、数据图表元素，横向构图」
 
-### A4 分类图标 ×8（200×200，同一母版批量生成，只换主体）
-主体清单：珍珠奶茶 / 火锅 / 烧烤串 / 汉堡薯条 / 甜品蛋糕 / 寿司 / 汤面 / 咖啡
-- 母版 C + 「主体名，单件商品居中，无背景杂物」
-- **一致性技巧**：同一工具、同一模型、同一次会话连续生成；生成后进像素级统一调色
+### A3 小程序首页 Banner 背景（1500×560，中央留白供排版）
+- 母版 C + 「俯拍木质餐桌美食场景，食物元素布置在边缘，中央大面积留白」
 
-### A5 空状态插画（400×300，三张一套）
-- 母版 B + 「空购物车」「空订单列表（一张纸和放大镜）」「空优惠券（虚线票券）」
-- EN 例: empty shopping cart, flat illustration
+### A4 分类图标 —— **走 iconfont，不用 AI**
+iconfont 检索关键词：`奶茶` `火锅` `烧烤` `汉堡` `甜品` `寿司` `面条` `咖啡`
+选图铁律：**同一合集内选满**（iconfont 搜索结果页勾选"合集"，一套图标一个设计师一个风格，混搭必丑）。
+
+### A5 空状态插画（400×300，三张）
+- 母版 B + 「空购物车」「空订单（纸与放大镜）」「空优惠券（虚线票券）」
 
 ### A6 商家默认封面占位图（1200×800）
-- 母版 C + 「成套餐具与美食俯拍场景，中央留白」
-- EN: tableware and food flat-lay scene, center space
+- 母版 C + 「成套餐具美食俯拍，中央留白」
 
-### A7 吉祥物（可选，不做也行）
-- 母版 C + 「戴厨师帽的小圆子吉祥物，微笑挥手，全身」
+### A7 商品演示图 —— **不用 AI**
+真实感照片用 Unsplash/Pexels，AI 生成的"假食物"观感差。
 
-### A8 商品演示图（不用 AI！）
-- 真实感商品照片用 **Unsplash/Pexels 免费图库** 下载，比 AI 生成的"假食物"观感好得多；AI 只负责插画/图标/装饰类
+## 5. iconfont 使用流程（小程序）
 
-## 5. 文件夹结构与命名规范
+### 5.1 检索关键词清单（M6 页面要用到的全套）
+
+| 模块 | 关键词 |
+|---|---|
+| tabbar 四态 | `首页` `订单` `我的`（+备用 `分类`） |
+| 通用 | `搜索` `定位` `时间` `优惠券` `购物车` `电话` `商家店铺` `五星评分` `右箭头` `加减号` |
+
+### 5.2 选图与下载方式
+
+| 用途 | 方式 | 说明 |
+|---|---|---|
+| tabbar 图标 | 下载 **PNG**（选中色 #1F1F1F 与激活色 #FFC300 各一张） | 81×81，微信官方建议尺寸；tabbar 只认图片不认字体 |
+| 页面内单色图标 | 项目内下载 **font class**，把字体转 base64 内嵌 `app.wxss` | 改色只改 CSS；生成 base64 用 transfont 类工具或 iconfont 的"base64"选项 |
+| 想偷懒 | 页面图标也全下 PNG 用 `<image>` | 零配置，代价是改色要重新下载——学习项目完全够用 |
+
+### 5.3 版权注意
+iconfont 图标分三种授权（免费商用/需授权/禁止商用），入库前看图标详情页授权标签；个人学习项目无碍，若将来开源/商用需替换或取得授权。
+
+## 6. 文件夹结构与命名规范
 
 ```
+miniprogram/images/
+├── tabbar/    tab-home.png + tab-home-active.png ...
+├── banner/    banner-home.png
+├── category/  cat-tea.png ...（iconfont PNG 或 SVG 转换）
+├── empty/     empty-cart.png ...
+└── logo/      logo.png
+
 admin-web/src/assets/
 ├── brand/     logo-*.png
 ├── images/    login-hero.png
-└── empty/     empty-cart.png / empty-order.png / empty-coupon.png
-
-miniprogram/images/
-├── tabbar/    tab-home.png + tab-home-active.png（81×81，两态）
-├── banner/    banner-home.png
-├── category/  cat-tea.png / cat-hotpot.png / cat-bbq.png / ...
-├── empty/     empty-cart.png
-└── logo/      logo.png
+└── empty/     empty-*.png
 ```
 
-命名规则：
-- **kebab-case + 前缀表用途**：`logo-` / `banner-` / `cat-`（分类）/ `empty-` / `tab-`
-- 小程序倍图后缀 `@2x`（分类图标 200×200 显示 100rpx）；tabbar 官方建议 81×81
-- AI 原图（4K 大图）**不入库**：先缩放+压缩（TinyPNG / squoosh.app）到目标尺寸，单图 ≤100KB 再进工程
-- 生成原图统一存项目外：`E:\作业\素材\原图\<日期>\`，工程里只放成品
+- 命名：kebab-case + 前缀（`logo-` `banner-` `cat-` `empty-` `tab-`），倍图 `@2x`
+- AI 原图（4K）**不入库**：存 `E:\作业\素材\原图\<日期>\`，缩放压缩到 ≤100KB 再进工程
+- 小程序单包 ≤2MB：图片必须压缩（TinyPNG / squoosh.app）
 
-## 6. 管理端主色落地（Element Plus 变量覆盖）
+## 7. 落地清单
 
-`admin-web/src/styles/index.css` 追加：
-
-```css
-:root {
-  --el-color-primary: #ff6b00;
-  --el-color-primary-light-3: #ff9a4d;
-  --el-color-primary-light-5: #ffb87a;
-  --el-color-primary-light-7: #ffd6ad;
-  --el-color-primary-light-8: #ffe3c2;
-  --el-color-primary-light-9: #fff1e5;
-  --el-color-primary-dark-2: #cc5600;
-}
-```
-
-管理端除登录页插画与空状态外**不加装饰性素材**——B 端界面的专业感来自留白和对齐，不来自图片。
+- [ ] iconfont 建项目（免费账号即可），按 5.1 清单检索加购
+- [ ] tabbar 四张 PNG（两态）落 `miniprogram/images/tabbar/`
+- [ ] AI 生成 A1/A2/A3/A5/A6（母版拼接），压缩后入库
+- [ ] 管理端不改 Element Plus 主色；品牌黄仅出现在 logo 与强调元素
