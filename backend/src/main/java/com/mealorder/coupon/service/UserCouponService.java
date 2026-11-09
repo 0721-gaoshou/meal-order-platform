@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.mealorder.common.exception.BusinessException;
 import com.mealorder.common.result.ResultCode;
 import com.mealorder.coupon.dto.CouponDtos.UserCouponVO;
+import com.mealorder.coupon.dto.CouponDtos.UsableCouponVO;
 import com.mealorder.coupon.entity.Coupon;
 import com.mealorder.coupon.entity.UserCoupon;
 import com.mealorder.coupon.mapper.CouponMapper;
@@ -82,6 +83,72 @@ public class UserCouponService {
         return mine.stream()
                 .map(uc -> toVO(uc, couponMap.get(uc.getCouponId()), now))
                 .toList();
+    }
+
+    /**
+     * 券可用性校验（计划书 §3.1 下单"券可用性校验"）：归属 → 状态 → 有效期 → 门槛
+     * 预览与下单都调它；预览只试算，真正的占用由下单事务内 markUsed CAS 决定
+     */
+    public Coupon requireUsable(Long userId, Long userCouponId, long totalAmount) {
+        UserCoupon mine = userCouponMapper.selectOne(new LambdaQueryWrapper<UserCoupon>()
+                .eq(UserCoupon::getId, userCouponId).eq(UserCoupon::getUserId, userId));
+        if (mine == null) {
+            throw new BusinessException(ResultCode.NOT_FOUND, "优惠券不存在");
+        }
+        if (!"UNUSED".equals(mine.getStatus())) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR,
+                    "USED".equals(mine.getStatus()) ? "该券已使用" : "该券不可用");
+        }
+        Coupon coupon = couponMapper.selectById(mine.getCouponId());
+        if (coupon == null) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR, "券模板已失效");
+        }
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(coupon.getStartTime())) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR, "券未到使用时间");
+        }
+        if (now.isAfter(coupon.getEndTime())) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR, "券已过期");
+        }
+        if (totalAmount < coupon.getThresholdAmount()) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR,
+                    "满 " + CouponService.fenToYuanText(coupon.getThresholdAmount()) + " 元可用");
+        }
+        return coupon;
+    }
+
+    /** 结算页选券列表：我的未使用券逐张判定可用性，并给出按当前金额的预计优惠 */
+    public List<UsableCouponVO> usableList(Long userId, long totalAmount) {
+        LocalDateTime now = LocalDateTime.now();
+        List<UserCoupon> unused = userCouponMapper.selectList(new LambdaQueryWrapper<UserCoupon>()
+                .eq(UserCoupon::getUserId, userId).eq(UserCoupon::getStatus, "UNUSED")
+                .orderByDesc(UserCoupon::getCreatedAt));
+        if (unused.isEmpty()) {
+            return List.of();
+        }
+        Map<Long, Coupon> couponMap = couponMapper.selectBatchIds(
+                        unused.stream().map(UserCoupon::getCouponId).collect(Collectors.toSet()))
+                .stream().collect(Collectors.toMap(Coupon::getId, Function.identity()));
+        return unused.stream().map(uc -> {
+            Coupon c = couponMap.get(uc.getCouponId());
+            String reason = null;
+            Long estimated = null;
+            if (c == null) {
+                reason = "券模板已失效";
+            } else if (now.isBefore(c.getStartTime())) {
+                reason = "未到使用时间";
+            } else if (now.isAfter(c.getEndTime())) {
+                reason = "已过期";
+            } else if (totalAmount < c.getThresholdAmount()) {
+                reason = "满 " + CouponService.fenToYuanText(c.getThresholdAmount()) + " 元可用";
+            } else {
+                estimated = CouponShareCalculator.discountOf(c, totalAmount);
+            }
+            return new UsableCouponVO(uc.getId(), uc.getCouponId(), c == null ? "券已失效" : c.getName(),
+                    c == null ? null : c.getType(), c == null ? null : c.getThresholdAmount(),
+                    c == null ? null : c.getDiscountAmount(), c == null ? null : c.getDiscountRate(),
+                    c == null ? null : c.getEndTime(), reason == null, estimated, reason);
+        }).toList();
     }
 
     private UserCouponVO toVO(UserCoupon uc, Coupon coupon, LocalDateTime now) {

@@ -4,6 +4,7 @@ import com.mealorder.common.result.R;
 import com.mealorder.common.util.UserContext;
 import com.mealorder.coupon.dto.CouponDtos.CenterCouponVO;
 import com.mealorder.coupon.dto.CouponDtos.UserCouponVO;
+import com.mealorder.coupon.dto.CouponDtos.UsableCouponVO;
 import com.mealorder.coupon.service.CouponService;
 import com.mealorder.coupon.service.UserCouponService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -48,5 +50,11 @@ public class CouponController {
     @GetMapping("/mine")
     public R<List<UserCouponVO>> mine() {
         return R.ok(userCouponService.mine(UserContext.get().userId()));
+    }
+
+    @Operation(summary = "结算页选券列表：按订单金额逐张判定可用性与预计优惠")
+    @GetMapping("/usable")
+    public R<List<UsableCouponVO>> usable(@RequestParam long amount) {
+        return R.ok(userCouponService.usableList(UserContext.get().userId(), amount));
     }
 }

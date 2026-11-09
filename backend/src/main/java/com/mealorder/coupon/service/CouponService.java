@@ -15,6 +15,7 @@ import com.mealorder.common.result.ResultCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -103,6 +104,10 @@ public class CouponService {
                 c.getThresholdAmount(), c.getDiscountAmount(), c.getDiscountRate(),
                 c.getTotalCount(), c.getRemain(), c.getStartTime(), c.getEndTime(),
                 receivedIds.contains(c.getId()))).toList();
+    }
+
+    public static String fenToYuanText(long fen) {
+        return new BigDecimal(fen).movePointLeft(2).toPlainString();
     }
 
     public static String derivedStatus(Coupon coupon, LocalDateTime now) {

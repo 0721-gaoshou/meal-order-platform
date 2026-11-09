@@ -7,6 +7,10 @@ import com.mealorder.cart.service.CartService;
 import com.mealorder.cart.service.CartService.CheckedItem;
 import com.mealorder.common.exception.BusinessException;
 import com.mealorder.common.result.ResultCode;
+import com.mealorder.coupon.entity.Coupon;
+import com.mealorder.coupon.mapper.UserCouponMapper;
+import com.mealorder.coupon.service.CouponShareCalculator;
+import com.mealorder.coupon.service.UserCouponService;
 import com.mealorder.goods.mapper.SkuMapper;
 import com.mealorder.order.dto.OrderDtos.CreateOrderRequest;
 import com.mealorder.order.dto.OrderDtos.OrderItemVO;
@@ -46,6 +50,8 @@ public class OrderService {
     private final SkuMapper skuMapper;
     private final CartService cartService;
     private final StringRedisTemplate redis;
+    private final UserCouponService userCouponService;
+    private final UserCouponMapper userCouponMapper;
 
     @Value("${order.expire-minutes}")
     private long expireMinutes;
@@ -67,14 +73,26 @@ public class OrderService {
         }
 
         List<CheckedItem> items = cartService.requireCartItems(userId, request.skuIds());
-        for (CheckedItem item : items) {
-            if (skuMapper.deductStock(item.sku().getId(), item.quantity()) == 0) {
+        long[] amounts = items.stream().mapToLong(i -> i.sku().getPrice() * i.quantity()).toArray();
+        for (int i = 0; i < items.size(); i++) {
+            if (skuMapper.deductStock(items.get(i).sku().getId(), items.get(i).quantity()) == 0) {
                 throw new BusinessException(ResultCode.BUSINESS_ERROR,
-                        "「" + item.spu().getName() + "」库存不足，请调整数量");
+                        "「" + items.get(i).spu().getName() + "」库存不足，请调整数量");
             }
         }
 
-        long totalAmount = items.stream().mapToLong(i -> i.sku().getPrice() * i.quantity()).sum();
+        long totalAmount = 0;
+        for (long amount : amounts) {
+            totalAmount += amount;
+        }
+        long discountAmount = 0;
+        long[] shares = null;
+        if (request.userCouponId() != null) {
+            Coupon coupon = userCouponService.requireUsable(userId, request.userCouponId(), totalAmount);
+            discountAmount = CouponShareCalculator.discountOf(coupon, totalAmount);
+            shares = CouponShareCalculator.allocate(discountAmount, amounts);
+        }
+
         // 时间戳显式赋值：MP insert 不回读 DB 默认值，创建响应要带 createdAt
         LocalDateTime now = LocalDateTime.now();
         Order order = new Order();
@@ -82,8 +100,9 @@ public class OrderService {
         order.setUserId(userId);
         order.setStatus("PENDING_PAY");
         order.setTotalAmount(totalAmount);
-        order.setDiscountAmount(0L);
-        order.setPayAmount(totalAmount);
+        order.setDiscountAmount(discountAmount);
+        order.setPayAmount(totalAmount - discountAmount);
+        order.setCouponId(request.userCouponId());
         order.setRemark(request.remark());
         order.setRequestId(request.requestId());
         order.setCreatedAt(now);
@@ -101,7 +120,14 @@ public class OrderService {
             return toVO(winner, itemsOf(winner.getId()));
         }
 
-        for (CheckedItem item : items) {
+        // 券核销（§4.7 CAS）：订单已有 ID 才能写 used_order_id；影响行数 0 说明券被别的订单抢用，整体回滚
+        if (request.userCouponId() != null
+                && userCouponMapper.markUsed(request.userCouponId(), userId, order.getId(), now) == 0) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR, "优惠券已被使用，请重新选择");
+        }
+
+        for (int i = 0; i < items.size(); i++) {
+            CheckedItem item = items.get(i);
             OrderItem oi = new OrderItem();
             oi.setOrderId(order.getId());
             oi.setSpuId(item.spu().getId());
@@ -111,7 +137,7 @@ public class OrderService {
             oi.setSkuImage(item.spu().getMainImage());
             oi.setQuantity(item.quantity());
             oi.setUnitPrice(item.sku().getPrice());
-            oi.setCouponShareAmount(0L);
+            oi.setCouponShareAmount(shares == null ? 0L : shares[i]);
             oi.setRefundStatus("NONE");
             orderItemMapper.insert(oi);
         }
@@ -167,7 +193,8 @@ public class OrderService {
 
     private OrderVO toVO(Order order, List<OrderItem> items) {
         return new OrderVO(order.getId(), order.getOrderNo(), order.getStatus(),
-                order.getTotalAmount(), order.getDiscountAmount(), order.getPayAmount(), order.getRemark(),
+                order.getTotalAmount(), order.getDiscountAmount(), order.getPayAmount(), order.getCouponId(),
+                order.getRemark(),
                 order.getExpireTime(), order.getPayTime(), order.getCreatedAt(),
                 items.stream().map(i -> new OrderItemVO(i.getSkuId(), i.getSpuId(), i.getSpuName(),
                         i.getSkuSpec(), i.getSkuImage(), i.getQuantity(), i.getUnitPrice(),

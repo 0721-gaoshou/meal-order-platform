@@ -27,9 +27,10 @@ public class CheckoutController {
         this.checkoutService = checkoutService;
     }
 
-    @Operation(summary = "结算预览（试算金额 + 发下单令牌，30 分钟有效）")
+    @Operation(summary = "结算预览（试算金额与券分摊 + 发下单令牌，30 分钟有效）")
     @PostMapping("/preview")
     public R<PreviewVO> preview(@Valid @RequestBody CheckoutRequest request) {
-        return R.ok(checkoutService.preview(UserContext.get().userId(), request.skuIds()));
+        return R.ok(checkoutService.preview(UserContext.get().userId(),
+                request.skuIds(), request.userCouponId()));
     }
 }

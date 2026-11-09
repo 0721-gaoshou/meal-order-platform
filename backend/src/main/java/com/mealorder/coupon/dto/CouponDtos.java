@@ -82,6 +82,23 @@ public final class CouponDtos {
             Boolean received) {
     }
 
+    /** 结算页选券列表：可用性与预计优惠额（真实核销在下单事务内 CAS） */
+    public record UsableCouponVO(
+            @JsonSerialize(using = ToStringSerializer.class) Long userCouponId,
+            @JsonSerialize(using = ToStringSerializer.class) Long couponId,
+            String name,
+            String type,
+            Long thresholdAmount,
+            Long discountAmount,
+            Integer discountRate,
+            LocalDateTime couponEndTime,
+            Boolean usable,
+            /** usable=true 时按传入金额算出的预计优惠·分 */
+            Long estimatedDiscount,
+            /** usable=false 时的原因 */
+            String reason) {
+    }
+
     public record UserCouponVO(
             @JsonSerialize(using = ToStringSerializer.class) Long id,
             @JsonSerialize(using = ToStringSerializer.class) Long couponId,
