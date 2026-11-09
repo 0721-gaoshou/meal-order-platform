@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class CartService {
 
     public void add(Long userId, Long skuId, Integer quantity) {
         Sku sku = requireOnSaleSku(skuId);
-        String key = key(userId);
+        String key = cartKey(userId);
         String field = skuId.toString();
         // HINCRBY 原子累加；越过库存则回补，避免并发加购把总量推过库存
         Long newQuantity = redis.opsForHash().increment(key, field, quantity);
@@ -51,19 +52,58 @@ public class CartService {
         if (quantity > sku.getStock()) {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "库存不足，当前仅剩 " + sku.getStock() + " 件");
         }
-        redis.opsForHash().put(key(userId), skuId.toString(), quantity.toString());
+        redis.opsForHash().put(cartKey(userId), skuId.toString(), quantity.toString());
     }
 
     public void remove(Long userId, Long skuId) {
-        redis.opsForHash().delete(key(userId), skuId.toString());
+        redis.opsForHash().delete(cartKey(userId), skuId.toString());
     }
 
     public void clear(Long userId) {
-        redis.delete(key(userId));
+        redis.delete(cartKey(userId));
+    }
+
+    /** 结算/下单共用：按 skuIds 从购物车取数量并校验在售，数量以服务端为准（防客户端篡改） */
+    public List<CheckedItem> requireCartItems(Long userId, List<Long> skuIds) {
+        List<Object> fields = skuIds.stream().map(id -> (Object) id.toString()).toList();
+        List<Object> values = redis.opsForHash().multiGet(cartKey(userId), fields);
+        Map<Long, Sku> skuMap = skuMapper.selectBatchIds(skuIds).stream()
+                .collect(Collectors.toMap(Sku::getId, Function.identity()));
+        Set<Long> spuIds = skuMap.values().stream().map(Sku::getSpuId).collect(Collectors.toSet());
+        Map<Long, Spu> spuMap = spuIds.isEmpty() ? Map.of()
+                : spuMapper.selectBatchIds(spuIds).stream()
+                        .collect(Collectors.toMap(Spu::getId, Function.identity()));
+
+        List<CheckedItem> items = new ArrayList<>(skuIds.size());
+        for (int i = 0; i < skuIds.size(); i++) {
+            Long skuId = skuIds.get(i);
+            Object quantity = values.get(i);
+            if (quantity == null) {
+                throw new BusinessException(ResultCode.BUSINESS_ERROR, "购物车条目已变化，请刷新购物车");
+            }
+            Sku sku = skuMap.get(skuId);
+            if (sku == null) {
+                throw new BusinessException(ResultCode.BUSINESS_ERROR, "商品已失效，请刷新购物车");
+            }
+            Spu spu = spuMap.get(sku.getSpuId());
+            if (spu == null || !"ON_SALE".equals(spu.getStatus())) {
+                throw new BusinessException(ResultCode.BUSINESS_ERROR, "「" + (spu == null ? skuId : spu.getName()) + "」已下架");
+            }
+            items.add(new CheckedItem(sku, spu, Integer.valueOf(quantity.toString())));
+        }
+        return items;
+    }
+
+    /** 结算级校验通过的购物车条目：数量来自 Redis，价格/名称来自 DB 现值 */
+    public record CheckedItem(Sku sku, Spu spu, Integer quantity) {
+    }
+
+    public static String cartKey(Long userId) {
+        return KEY_PREFIX + userId;
     }
 
     public CartVO list(Long userId) {
-        Map<Object, Object> entries = redis.opsForHash().entries(key(userId));
+        Map<Object, Object> entries = redis.opsForHash().entries(cartKey(userId));
         if (entries.isEmpty()) {
             return new CartVO(List.of(), 0, 0L);
         }
@@ -112,9 +152,5 @@ public class CartService {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "商品已下架");
         }
         return sku;
-    }
-
-    private String key(Long userId) {
-        return KEY_PREFIX + userId;
     }
 }

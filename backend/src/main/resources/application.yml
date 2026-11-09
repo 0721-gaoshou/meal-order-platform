@@ -56,6 +56,10 @@ jwt:
   access-ttl-hours: 2
   refresh-ttl-days: 7
 
+# 订单（M2）：支付截止时长分钟数，M5 延迟取消按 expire_time 执行；测试期可配小值
+order:
+  expire-minutes: 30
+
 # RustFS（S3 兼容对象存储），容器见 docker/docker-compose.yml
 rustfs:
   endpoint: http://localhost:9000
