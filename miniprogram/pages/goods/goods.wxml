@@ -1,0 +1,27 @@
+<!--goods.wxml-->
+<navigation-bar title="点餐" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="scrollarea" scroll-y type="list" bindscrolltolower="onReachBottom">
+  <view class="list">
+    <view class="goods-row" wx:for="{{list}}" wx:key="spuId">
+      <image wx:if="{{item.image}}" class="goods-img" src="{{item.image}}" mode="aspectFill"></image>
+      <view wx:else class="goods-img goods-img-empty">图</view>
+      <view class="goods-info">
+        <view class="goods-name">{{item.name}}</view>
+        <view class="goods-spec">{{item.spec}} {{item.moreSpec}}</view>
+        <view class="goods-bottom">
+          <text class="goods-price">¥{{item.priceText}}</text>
+          <view
+            class="add-btn {{addedSkuId === item.skuId ? 'add-pop' : ''}}"
+            hover-class="add-hover"
+            data-skuid="{{item.skuId}}"
+            data-stock="{{item.stock}}"
+            bindtap="onTapAdd"
+          >+</view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{!list.length && !loading}}" class="empty">暂无在售商品，请先到管理端上架</view>
+    <view wx:if="{{loading}}" class="loading">加载中…</view>
+  </view>
+  <view class="cart-float" hover-class="add-hover" bindtap="onTapGoCart">购物车 ›</view>
+</scroll-view>

@@ -2,6 +2,17 @@
 <navigation-bar title="点餐平台" back="{{false}}" color="black" background="#FFF"></navigation-bar>
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
+    <!-- 开发者登录占位：正式微信登录 M4 -->
+    <view class="login-card" wx:if="{{!token}}">
+      <view class="tip">当前未登录，购物车/下单接口需要登录态</view>
+      <button class="btn-accent" hover-class="btn-active" bindtap="onTapLogin">开发者登录（admin）</button>
+    </view>
+
+    <view class="entry-card" wx:else>
+      <button class="btn-accent" hover-class="btn-active" bindtap="onTapGoods">去点餐</button>
+      <button class="btn-ghost" hover-class="btn-active" bindtap="onTapCart">购物车</button>
+    </view>
+
     <button type="primary" size="default" loading="{{checking}}" bindtap="onTapHealth">
       健康检查（M0 验收）
     </button>
