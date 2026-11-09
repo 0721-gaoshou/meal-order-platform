@@ -1,6 +1,9 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/goods/goods",
+    "pages/cart/cart",
+    "pages/checkout/checkout"
   ],
   "window": {
     "navigationBarTextStyle": "black",

@@ -17,6 +17,46 @@ page {
   padding-top: 120rpx;
 }
 
+.login-card,
+.entry-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  width: 560rpx;
+  padding: 32rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.tip {
+  font-size: 26rpx;
+  color: #8a8a8a;
+  text-align: center;
+}
+
+.btn-accent {
+  background: #ff6b35;
+  color: #fff;
+  border-radius: 14rpx;
+  font-size: 30rpx;
+}
+
+.btn-ghost {
+  background: #fff;
+  color: #ff6b35;
+  border: 2rpx solid #ff6b35;
+  border-radius: 14rpx;
+  font-size: 30rpx;
+}
+
+/* 触屏反馈用灰色按压态，不依赖系统蓝 */
+.btn-active {
+  background: #f2f2f2 !important;
+  color: #666 !important;
+  opacity: 0.85;
+}
+
 .health-result {
   font-size: 26rpx;
   color: #666;
@@ -24,4 +64,3 @@ page {
   text-align: center;
   word-break: break-all;
 }
-

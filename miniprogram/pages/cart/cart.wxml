@@ -1,0 +1,69 @@
+<!--cart.wxml-->
+<navigation-bar title="购物车" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="head">
+  <text class="head-count">共 {{items.length}} 种</text>
+  <text class="head-clear" hover-class="dim" bindtap="onTapClear">清空</text>
+</view>
+
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="rows" wx:if="{{items.length}}">
+    <view class="slot" wx:for="{{items}}" wx:key="skuId">
+      <view class="trash" data-index="{{index}}" catchtap="onTapDelete">删除</view>
+      <view
+        class="card {{item.snap ? 'snap' : ''}}"
+        style="transform: translateX({{item.tx}}px)"
+        data-index="{{index}}"
+        touchstart="onTouchStart"
+        touchmove="onTouchMove"
+        touchend="onTouchEnd"
+        touchcancel="onTouchEnd"
+      >
+        <view class="card-inner {{item.flyPhase === 'a' ? 'fly-a' : item.flyPhase === 'b' ? 'fly-b' : ''}}">
+          <view
+            class="check {{item.vChecked ? 'checked' : ''}} {{!item.valid ? 'disabled' : ''}}"
+            hover-class="dim"
+            data-index="{{index}}"
+            catchtap="onTapCheck"
+          >
+            <text class="tick">✓</text>
+          </view>
+          <image wx:if="{{item.mainImage}}" class="thumb" src="{{item.mainImage}}" mode="aspectFill"></image>
+          <view wx:else class="thumb thumb-empty">图</view>
+          <view class="info">
+            <view class="name">{{item.spuName}}</view>
+            <view class="spec">
+              {{item.spec}}
+              <text wx:if="{{!item.valid}}" class="invalid-tag">失效</text>
+            </view>
+            <view class="row-bottom">
+              <text class="price">¥{{item.priceText}}</text>
+              <view class="stepper">
+                <view class="step" hover-class="step-hover" data-index="{{index}}" catchtap="onTapMinus">−</view>
+                <text class="qty {{item.pop ? 'qty-pop' : ''}}">{{item.quantity}}</text>
+                <view class="step" hover-class="step-hover" data-index="{{index}}" catchtap="onTapPlus">+</view>
+              </view>
+            </view>
+            <view wx:if="{{item.valid && item.stock <= 5}}" class="stock-hint">仅剩 {{item.stock}} 件</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view wx:elif="{{!loading}}" class="empty">
+    购物车还是空的
+    <view class="empty-sub">去首页「去点餐」加购吧</view>
+  </view>
+</scroll-view>
+
+<view class="footer">
+  <view class="all {{allSelected ? 'on' : ''}}" hover-class="dim" bindtap="onTapAll">
+    <view class="check all-box {{allSelected ? 'checked' : ''}}"><text class="tick">✓</text></view>
+    <text>全选</text>
+  </view>
+  <view class="total">
+    合计 <text class="total-num">¥{{selAmountText}}</text>
+  </view>
+  <view class="go {{selCount ? '' : 'go-disabled'}}" hover-class="go-hover" bindtap="onTapCheckout">
+    去结算({{selCount}})
+  </view>
+</view>

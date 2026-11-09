@@ -1,0 +1,51 @@
+<!--checkout.wxml-->
+<navigation-bar title="结算" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="body" wx:if="{{ready}}">
+    <view class="card">
+      <view class="item" wx:for="{{items}}" wx:key="skuId">
+        <view class="item-info">
+          <view class="item-name">{{item.spuName}}</view>
+          <view class="item-spec">{{item.skuSpec}} · ¥{{item.priceText}} × {{item.quantity}}</view>
+        </view>
+        <view class="item-sub">¥{{item.subtotalText}}</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="label-row">
+        <text class="label">备注</text>
+        <text class="count">{{remark.length}}/255</text>
+      </view>
+      <textarea
+        class="remark"
+        value="{{remark}}"
+        maxlength="255"
+        placeholder="口味、取餐偏好等（可不填）"
+        bindinput="onInputRemark"
+      ></textarea>
+    </view>
+
+    <view class="hint">数量与价格以服务端购物车实时值为准；库存不足会在提交时整体回滚</view>
+  </view>
+
+  <view wx:else class="offline">
+    <view>结算信息不可用（商品可能已下架或条目已变动）</view>
+    <view class="retry" hover-class="dim" bindtap="onTapRefresh">重新试算</view>
+  </view>
+</scroll-view>
+
+<view class="footer" wx:if="{{ready}}">
+  <view class="total">
+    实付 <text class="total-num">¥{{totalText}}</text>
+  </view>
+  <button
+    class="submit"
+    hover-class="submit-hover"
+    loading="{{submitting}}"
+    disabled="{{submitting}}"
+    bindtap="onTapSubmit"
+  >
+    提交订单
+  </button>
+</view>
