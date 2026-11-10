@@ -33,4 +33,21 @@ public final class PayDtos {
             String tradeNo,
             Long amount) {
     }
+
+    public record RefundApplyRequest(
+            @jakarta.validation.constraints.Size(max = 255, message = "退款原因最长 255 字") String reason) {
+    }
+
+    public record RefundVO(
+            @JsonSerialize(using = ToStringSerializer.class) Long orderId,
+            String refundNo,
+            Long refundAmount,
+            String status,
+            String orderStatus) {
+    }
+
+    /** Mock 退款回调：refundNo 幂等锚点 */
+    public record MockRefundCallbackRequest(
+            @NotBlank(message = "缺少退款单号") String refundNo) {
+    }
 }

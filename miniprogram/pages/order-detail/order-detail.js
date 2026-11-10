@@ -13,7 +13,10 @@ const STATUS_TIP = {
   READY: '餐品已就绪，请到店取餐',
   COMPLETED: '订单已完成，感谢光临',
   CLOSED: '订单已取消',
+  REFUNDING: '退款申请已提交，等待渠道处理',
+  REFUNDED: '退款已完成，款项将原路退回',
 }
+const REFUNDABLE = ['PAID', 'MAKING', 'READY']
 const STATUS_CARD_CLASS = {
   PAID: 'status-green', MAKING: 'status-green', READY: 'status-green', COMPLETED: 'status-green',
   CLOSED: 'status-grey', REFUNDING: 'status-grey', REFUNDED: 'status-grey',
@@ -36,6 +39,7 @@ Page({
     order: null,
     loading: true,
     paying: false,
+    refunding: false,
   },
 
   onLoad(query) {
@@ -64,6 +68,7 @@ Page({
             statusTip: STATUS_TIP[o.status] || '',
             statusCardClass: STATUS_CARD_CLASS[o.status] || '',
             pending: o.status === 'PENDING_PAY',
+            refundable: REFUNDABLE.indexOf(o.status) >= 0,
             countdownText: o.status === 'PENDING_PAY' ? countdownText(o.expireTime) : '',
             createdText: (o.createdAt || '').replace('T', ' ').slice(0, 16),
             expireText: (o.expireTime || '').replace('T', ' ').slice(0, 16),
@@ -121,6 +126,21 @@ Page({
           .catch(() => {})
       },
     })
+  },
+
+  // Mock 退款：申请 → 模拟渠道退款回调 → 刷新为已退款（正式微信退款 M9 替换回调来源）
+  onTapRefund() {
+    if (this.data.refunding) return
+    this.setData({ refunding: true })
+    api
+      .orderRefund(this.orderId, { reason: '用户申请退款（Mock）' })
+      .then((refund) => api.refundMockCallback({ refundNo: refund.refundNo }))
+      .then(() => {
+        this.setData({ refunding: false })
+        wx.showToast({ title: '退款成功', icon: 'success' })
+        setTimeout(() => this.load(), 600)
+      })
+      .catch(() => this.setData({ refunding: false }))
   },
 
   onUnload() {

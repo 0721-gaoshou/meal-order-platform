@@ -80,6 +80,14 @@ function orderCancel(orderId) {
   return request({ url: '/orders/' + orderId + '/cancel', method: 'POST' })
 }
 
+function orderRefund(orderId, data) {
+  return request({ url: '/pay/orders/' + orderId + '/refund', method: 'POST', data })
+}
+
+function refundMockCallback(data) {
+  return request({ url: '/pay/mock-refund-callback', method: 'POST', data })
+}
+
 // ------- 优惠券 -------
 function couponCenter() {
   return request({ url: '/coupons' })
@@ -110,6 +118,8 @@ module.exports = {
   orderPay,
   payMockCallback,
   orderCancel,
+  orderRefund,
+  refundMockCallback,
   cartList,
   cartAdd,
   cartUpdateQuantity,

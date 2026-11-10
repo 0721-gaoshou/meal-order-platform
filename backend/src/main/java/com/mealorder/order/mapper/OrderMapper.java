@@ -16,4 +16,12 @@ public interface OrderMapper extends BaseMapper<Order> {
     /** 状态机 CAS：待支付 → 已取消 */
     @Update("UPDATE orders SET status = 'CLOSED' WHERE id = #{id} AND status = 'PENDING_PAY'")
     int markClosed(@Param("id") Long id);
+
+    /** 通用状态流转（前后态都校验，防跳态） */
+    @Update("UPDATE orders SET status = #{to} WHERE id = #{id} AND status = #{from}")
+    int transit(@Param("id") Long id, @Param("from") String from, @Param("to") String to);
+
+    /** 申请退款：已支付/制作中/待取餐 → 退款中 */
+    @Update("UPDATE orders SET status = 'REFUNDING' WHERE id = #{id} AND status IN ('PAID','MAKING','READY')")
+    int markRefunding(@Param("id") Long id);
 }
