@@ -59,6 +59,8 @@ jwt:
 # 订单（M2）：支付截止时长分钟数，M5 延迟取消按 expire_time 执行；测试期可配小值
 order:
   expire-minutes: 30
+  # 超时订单扫描间隔（M5 兜底任务；开发期 10s 便于观察）
+  timeout-scan-ms: 10000
 
 # RustFS（S3 兼容对象存储），容器见 docker/docker-compose.yml
 rustfs:

@@ -8,8 +8,6 @@ import com.mealorder.cart.service.CartService.CheckedItem;
 import com.mealorder.common.exception.BusinessException;
 import com.mealorder.common.result.ResultCode;
 import com.mealorder.coupon.entity.Coupon;
-import com.mealorder.coupon.entity.UserCoupon;
-import com.mealorder.coupon.mapper.CouponMapper;
 import com.mealorder.coupon.mapper.UserCouponMapper;
 import com.mealorder.coupon.service.CouponShareCalculator;
 import com.mealorder.coupon.service.UserCouponService;
@@ -54,7 +52,7 @@ public class OrderService {
     private final StringRedisTemplate redis;
     private final UserCouponService userCouponService;
     private final UserCouponMapper userCouponMapper;
-    private final CouponMapper couponMapper;
+    private final OrderCancelService orderCancelService;
 
     @Value("${order.expire-minutes}")
     private long expireMinutes;
@@ -162,8 +160,8 @@ public class OrderService {
     }
 
     /**
-     * 取消待支付订单（§4.2 状态机 PENDING_PAY→CLOSED）：
-     * 回补库存 + 返还券（仅未过期的券返还，§4.7；过期券不返还）
+     * 取消待支付订单（用户主动）：校验归属与状态后走统一取消出口
+     * （超时自动取消复用同一出口 OrderCancelService）
      */
     @Transactional(rollbackFor = Exception.class)
     public void cancel(Long userId, Long orderId) {
@@ -174,19 +172,8 @@ public class OrderService {
         if (!"PENDING_PAY".equals(order.getStatus())) {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "只能取消待支付订单");
         }
-        if (orderMapper.markClosed(orderId) == 0) {
+        if (!orderCancelService.cancel(order)) {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "订单状态已变化，请刷新后重试");
-        }
-        for (OrderItem item : itemsOf(orderId)) {
-            skuMapper.restoreStock(item.getSkuId(), item.getQuantity());
-        }
-        if (order.getCouponId() != null) {
-            UserCoupon userCoupon = userCouponMapper.selectById(order.getCouponId());
-            Coupon coupon = userCoupon == null ? null : couponMapper.selectById(userCoupon.getCouponId());
-            if (userCoupon != null && coupon != null
-                    && !LocalDateTime.now().isAfter(coupon.getEndTime())) {
-                userCouponMapper.restoreToUnused(userCoupon.getId(), userId, orderId);
-            }
         }
     }
 
