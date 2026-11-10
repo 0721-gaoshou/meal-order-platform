@@ -4,6 +4,7 @@ import com.mealorder.common.result.R;
 import com.mealorder.common.result.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -53,6 +54,13 @@ public class GlobalExceptionHandler {
     public R<Void> handleNotReadable(HttpMessageNotReadableException e) {
         log.warn("请求体不可读: {}", e.getMessage());
         return R.fail(ResultCode.PARAM_ERROR, "请求体格式错误");
+    }
+
+    /** 路径/查询参数类型不匹配（如 /coupons/undefined/receive），归为参数错误而非系统异常 */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public R<Void> handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+        log.warn("参数类型不匹配: name={}, value={}", e.getName(), e.getValue());
+        return R.fail(ResultCode.PARAM_ERROR, "参数格式错误: " + e.getName());
     }
 
     /** 404：路径不存在（Spring 6.1+ 静态资源未命中抛出） */

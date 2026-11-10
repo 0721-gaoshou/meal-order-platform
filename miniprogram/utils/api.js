@@ -37,18 +37,63 @@ function cartClear() {
 }
 
 // ------- 结算与下单 -------
-function checkoutPreview(skuIds) {
-  return request({ url: '/checkout/preview', method: 'POST', data: { skuIds } })
+function checkoutPreview(skuIds, userCouponId) {
+  return request({ url: '/checkout/preview', method: 'POST', data: { skuIds, userCouponId } })
 }
 
 function orderCreate(data) {
   return request({ url: '/orders', method: 'POST', data })
 }
 
+// ------- C 端公开商品（免登录） -------
+function publicCategories() {
+  return request({ url: '/public/goods/categories' })
+}
+
+function publicSpus(params) {
+  return request({ url: '/public/goods/spus', data: params })
+}
+
+function publicSpuDetail(id) {
+  return request({ url: '/public/goods/spus/' + id })
+}
+
+// ------- 订单 -------
+function ordersPage(params) {
+  return request({ url: '/orders/page', data: params })
+}
+
+function orderDetail(id) {
+  return request({ url: '/orders/' + id })
+}
+
+// ------- 优惠券 -------
+function couponCenter() {
+  return request({ url: '/coupons' })
+}
+
+function couponReceive(couponId) {
+  return request({ url: '/coupons/' + couponId + '/receive', method: 'POST' })
+}
+
+function myCoupons() {
+  return request({ url: '/coupons/mine' })
+}
+
+// 结算页选券：按订单金额逐张给出可用性与预计优惠（amount 单位·分）
+function usableCoupons(amount) {
+  return request({ url: '/coupons/usable?amount=' + amount })
+}
+
 module.exports = {
   health,
   login,
   spuPage,
+  publicCategories,
+  publicSpus,
+  publicSpuDetail,
+  ordersPage,
+  orderDetail,
   cartList,
   cartAdd,
   cartUpdateQuantity,
@@ -56,4 +101,8 @@ module.exports = {
   cartClear,
   checkoutPreview,
   orderCreate,
+  couponCenter,
+  couponReceive,
+  myCoupons,
+  usableCoupons,
 }

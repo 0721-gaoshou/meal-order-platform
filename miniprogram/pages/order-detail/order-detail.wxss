@@ -1,0 +1,156 @@
+/**order-detail.wxss**/
+page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f6f6f6;
+}
+
+.scrollarea {
+  flex: 1;
+  overflow-y: hidden;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  padding: 24rpx;
+}
+
+.status-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+  background: #ff6b35;
+  border-radius: 20rpx;
+  padding: 36rpx 32rpx;
+  color: #fff;
+}
+
+.status-green {
+  background: #2ba471;
+}
+
+.status-grey {
+  background: #9b9b9b;
+}
+
+.status-countdown {
+  font-size: 24rpx;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8rpx;
+  padding: 4rpx 16rpx;
+  align-self: flex-start;
+}
+
+.status-name {
+  font-size: 40rpx;
+  font-weight: 600;
+}
+
+.status-tip {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+.status-no {
+  font-size: 22rpx;
+  opacity: 0.75;
+  margin-top: 8rpx;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+}
+
+.items {
+  gap: 24rpx;
+}
+
+.item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item-name {
+  font-size: 28rpx;
+  color: #222;
+}
+
+.item-spec {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4rpx;
+}
+
+.item-sub {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.item-share {
+  font-size: 22rpx;
+  color: #e5533d;
+}
+
+.amounts {
+  gap: 16rpx;
+}
+
+.amount-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.amount-off {
+  color: #e5533d;
+}
+
+.amount-pay {
+  font-size: 28rpx;
+  color: #222;
+}
+
+.price {
+  font-size: 36rpx;
+}
+
+.info {
+  gap: 16rpx;
+}
+
+.info-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 24rpx;
+}
+
+.info-label {
+  color: #999;
+}
+
+.info-value {
+  color: #444;
+  max-width: 460rpx;
+  text-align: right;
+}

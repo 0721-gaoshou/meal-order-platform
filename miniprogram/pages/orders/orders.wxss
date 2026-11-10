@@ -1,0 +1,173 @@
+/**orders.wxss**/
+page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f6f6f6;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  gap: 40rpx;
+  padding: 0 32rpx;
+  background: #fff;
+}
+
+.tab {
+  padding: 22rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  border-bottom: 4rpx solid transparent;
+}
+
+.tab-on {
+  color: #ff6b35;
+  font-weight: 600;
+  border-bottom-color: #ff6b35;
+}
+
+.scrollarea {
+  flex: 1;
+  overflow-y: hidden;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  padding: 24rpx;
+}
+
+.order-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+}
+
+.order-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-no {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.tag-green {
+  background: #e8f7ee;
+  color: #2ba471;
+}
+
+.order-summary {
+  font-size: 28rpx;
+  color: #222;
+}
+
+.order-meta {
+  display: flex;
+  flex-direction: row;
+}
+
+.countdown {
+  font-size: 22rpx;
+  color: #e5533d;
+  background: #fff2ec;
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.order-foot {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-time-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.order-time {
+  font-size: 22rpx;
+  color: #bbb;
+}
+
+.order-discount {
+  font-size: 22rpx;
+  color: #e5533d;
+}
+
+.order-amount {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.price {
+  font-size: 32rpx;
+}
+
+.list-tip {
+  text-align: center;
+  color: #bbb;
+  font-size: 22rpx;
+  padding: 20rpx 0;
+}
+
+.login-btn {
+  margin-top: 12rpx;
+  padding: 16rpx 64rpx;
+  text-align: center;
+  color: #fff;
+  background: #ff6b35;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+}
+
+/* 骨架屏 */
+.sk {
+  height: 28rpx;
+  border-radius: 8rpx;
+  background: #f0f0f0;
+}
+
+.sk-line {
+  margin: 6rpx 0;
+}
+
+/* 空态装饰（纯 CSS，等插画素材后替换） */
+.empty-art {
+  position: relative;
+  width: 160rpx;
+  height: 120rpx;
+  margin-bottom: 8rpx;
+}
+
+.empty-circle {
+  position: absolute;
+  left: 20rpx;
+  top: 10rpx;
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background: #f2f2f2;
+}
+
+.empty-bar {
+  position: absolute;
+  left: 96rpx;
+  top: 46rpx;
+  width: 56rpx;
+  height: 18rpx;
+  border-radius: 9rpx;
+  background: #f7f7f7;
+}

@@ -1,0 +1,108 @@
+/**coupons.wxss**/
+page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f6f6f6;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  background: #fff;
+  gap: 40rpx;
+  padding: 0 32rpx;
+}
+
+.tab {
+  padding: 24rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  border-bottom: 4rpx solid transparent;
+}
+
+.tab-on {
+  color: #ff6b35;
+  font-weight: 600;
+  border-bottom-color: #ff6b35;
+}
+
+.dim {
+  opacity: 0.6;
+}
+
+.scrollarea {
+  flex: 1;
+  overflow-y: hidden;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  padding: 24rpx;
+}
+
+.coupon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx 24rpx;
+}
+
+.coupon-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.coupon-type {
+  font-size: 32rpx;
+  color: #ff5000;
+  font-weight: 600;
+}
+
+.coupon-sub,
+.coupon-time,
+.coupon-remain {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.coupon-btn {
+  padding: 14rpx 32rpx;
+  background: #ff6b35;
+  color: #fff;
+  border-radius: 32rpx;
+  font-size: 26rpx;
+}
+
+.coupon-btn-off {
+  background: #eee;
+  color: #999;
+}
+
+.coupon-status {
+  font-size: 26rpx;
+  color: #ff6b35;
+}
+
+.coupon-dead .coupon-type,
+.coupon-dead .coupon-sub,
+.coupon-dead .coupon-time {
+  color: #bbb;
+}
+
+.coupon-dead .coupon-status {
+  color: #bbb;
+}
+
+.empty {
+  text-align: center;
+  color: #999;
+  font-size: 26rpx;
+  padding: 120rpx 0;
+}

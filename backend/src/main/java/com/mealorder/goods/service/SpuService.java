@@ -54,6 +54,17 @@ public class SpuService {
         return toVOPage(page);
     }
 
+    /** 商品详情（C 端只允许看在售商品） */
+    public SpuVO detail(Long id) {
+        Spu spu = requireById(id);
+        if (!STATUS_ON_SALE.equals(spu.getStatus())) {
+            throw new BusinessException(ResultCode.NOT_FOUND, "商品已下架");
+        }
+        List<Sku> skus = skuMapper.selectList(Wrappers.<Sku>lambdaQuery().eq(Sku::getSpuId, id));
+        Category category = categoryMapper.selectById(spu.getCategoryId());
+        return toVO(spu, skus, category == null ? null : category.getName());
+    }
+
     @Transactional
     public Long create(SpuUpsertRequest request) {
         Spu spu = new Spu();

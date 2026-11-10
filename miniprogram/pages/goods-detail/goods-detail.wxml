@@ -1,0 +1,82 @@
+<!--goods-detail.wxml-->
+<navigation-bar title="商品详情" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view wx:if="{{spu}}">
+    <image wx:if="{{spu.mainImage}}" class="hero" src="{{spu.mainImage}}" mode="aspectFill"></image>
+    <view wx:else class="hero hero-empty">商品图</view>
+
+    <view class="card info">
+      <view class="name">{{spu.name}}</view>
+      <view class="tags" wx:if="{{spu.tagList.length}}">
+        <text class="tag" wx:for="{{spu.tagList}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+      </view>
+      <view class="price-row">
+        <text class="price price-big"><text class="price-unit">¥</text>{{spu.minPriceText}}</text>
+        <text class="stock" wx:if="{{spu.totalStock > 0}}">库存 {{spu.totalStock}} 件</text>
+        <text class="stock stock-out" wx:else>已售罄</text>
+      </view>
+      <view class="desc" wx:if="{{spu.description}}">{{spu.description}}</view>
+    </view>
+
+    <view class="card spec-row" hover-class="dim" bindtap="openSheet" data-mode="cart">
+      <text class="spec-label">规格</text>
+      <text class="spec-value">{{skuList.length}} 种可选</text>
+      <text class="arrow">›</text>
+    </view>
+  </view>
+
+  <view wx:elif="{{!loading}}" class="empty">商品不存在或已下架</view>
+  <view wx:if="{{loading}}" class="empty">加载中…</view>
+</scroll-view>
+
+<view class="footer" wx:if="{{spu}}">
+  <view class="cart-entry" hover-class="dim" bindtap="onTapCart">购物车</view>
+  <view class="btn-ghost footer-btn" hover-class="dim" bindtap="openSheet" data-mode="cart">加入购物车</view>
+  <view class="btn-accent footer-btn" hover-class="dim" bindtap="openSheet" data-mode="buy">立即购买</view>
+</view>
+
+<view class="mask" wx:if="{{sheet}}" bindtap="closeSheet"></view>
+<view class="sheet" wx:if="{{sheet}}">
+  <view class="sheet-head">
+    <view class="sheet-price">
+      <text class="price price-big"><text class="price-unit">¥</text>{{selectedPriceText}}</text>
+      <text class="sheet-stock">库存 {{selectedStock}} 件</text>
+    </view>
+    <text class="sheet-close" bindtap="closeSheet">×</text>
+  </view>
+
+  <view class="sheet-label">选择规格</view>
+  <view class="sku-list">
+    <view
+      class="sku {{selectedSkuId === item.id ? 'sku-on' : ''}} {{item.soldOut ? 'sku-off' : ''}}"
+      wx:for="{{skuList}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      data-soldout="{{item.soldOut}}"
+      bindtap="onPickSku"
+    >
+      <text>{{item.spec}}</text>
+      <text class="sku-price" wx:if="{{!item.soldOut}}">¥{{item.priceText}}</text>
+      <text class="sku-price" wx:else>售罄</text>
+    </view>
+  </view>
+
+  <view class="qty-row">
+    <text class="sheet-label">数量</text>
+    <view class="stepper">
+      <view class="step" hover-class="step-hover" bindtap="onQtyMinus">−</view>
+      <text class="qty">{{qty}}</text>
+      <view class="step" hover-class="step-hover" bindtap="onQtyPlus">+</view>
+    </view>
+  </view>
+
+  <view class="sheet-total">合计 <text class="price"><text class="price-unit">¥</text>{{totalText}}</text></view>
+
+  <button
+    class="confirm {{submitting ? 'confirm-disabled' : ''}}"
+    hover-class="dim"
+    loading="{{submitting}}"
+    bindtap="onConfirm"
+  >{{buyMode === 'buy' ? '立即购买' : '加入购物车'}}</button>
+</view>

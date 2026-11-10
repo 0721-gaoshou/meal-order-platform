@@ -1,0 +1,122 @@
+/**mine.wxss**/
+page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f6f6f6;
+}
+
+.scrollarea {
+  flex: 1;
+  overflow-y: hidden;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  padding: 32rpx 24rpx;
+}
+
+.profile {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 32rpx 28rpx;
+}
+
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: #ff6b35;
+  color: #fff;
+  font-size: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-guest {
+  background: #ddd;
+}
+
+.profile-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.profile-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #222;
+}
+
+.profile-sub {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.profile-tip {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.profile-btn {
+  padding: 12rpx 36rpx;
+  background: #ff6b35;
+  color: #fff;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 0 28rpx;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx 0;
+  font-size: 28rpx;
+  color: #222;
+}
+
+.menu-hover {
+  opacity: 0.6;
+}
+
+.menu-arrow {
+  color: #ccc;
+  font-size: 32rpx;
+}
+
+.logout {
+  margin-top: 16rpx;
+  padding: 26rpx 0;
+  text-align: center;
+  background: #fff;
+  border-radius: 20rpx;
+  font-size: 28rpx;
+  color: #e5533d;
+}
+
+.about {
+  text-align: center;
+  font-size: 22rpx;
+  color: #bbb;
+  padding-top: 24rpx;
+}

@@ -17,9 +17,10 @@ public final class OrderDtos {
     private OrderDtos() {
     }
 
-    /** 结算预览/下单共用的选品：只传 skuId，数量以服务端购物车为准（防篡改） */
+    /** 结算预览/下单共用的选品：只传 skuId，数量以服务端购物车为准（防篡改）；userCouponId 可选 */
     public record CheckoutRequest(
-            @NotEmpty(message = "请选择商品") @Size(max = 50, message = "单次最多结算 50 种商品") List<Long> skuIds) {
+            @NotEmpty(message = "请选择商品") @Size(max = 50, message = "单次最多结算 50 种商品") List<Long> skuIds,
+            Long userCouponId) {
     }
 
     public record PreviewItemVO(
@@ -29,18 +30,23 @@ public final class OrderDtos {
             String skuImage,
             Long unitPrice,
             Integer quantity,
-            Long subtotal) {
+            Long subtotal,
+            /** 本行分摊到的优惠·分（§4.8，未选券为 0） */
+            Long couponShareAmount) {
     }
 
-    /** token：下单令牌，提交时 DEL 成功才放行（§4.10 第二层） */
-    public record PreviewVO(List<PreviewItemVO> items, Long totalAmount, String token) {
+    /** token：下单令牌，提交时 DEL 成功才放行（§4.10 第二层）；payAmount = totalAmount - discountAmount */
+    public record PreviewVO(List<PreviewItemVO> items, Long totalAmount, Long discountAmount,
+                            Long payAmount, String couponName, String token) {
     }
 
     public record CreateOrderRequest(
             @NotBlank(message = "缺少 requestId") @Size(max = 64) String requestId,
             @NotBlank(message = "缺少下单令牌") String token,
             @NotEmpty(message = "请选择商品") @Size(max = 50, message = "单次最多结算 50 种商品") List<Long> skuIds,
-            @Size(max = 255, message = "备注最长 255 字") String remark) {
+            @Size(max = 255, message = "备注最长 255 字") String remark,
+            /** 使用的用户券ID（user_coupon.id），可为空 */
+            Long userCouponId) {
     }
 
     public record OrderItemVO(
@@ -62,6 +68,7 @@ public final class OrderDtos {
             Long totalAmount,
             Long discountAmount,
             Long payAmount,
+            @JsonSerialize(using = ToStringSerializer.class) Long couponId,
             String remark,
             LocalDateTime expireTime,
             LocalDateTime payTime,

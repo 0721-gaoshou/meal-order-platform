@@ -45,10 +45,51 @@ page {
   margin-top: 4rpx;
 }
 
+.item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4rpx;
+}
+
 .item-sub {
   font-size: 28rpx;
   color: #ff5000;
   font-weight: 600;
+}
+
+.item-share {
+  font-size: 22rpx;
+  color: #e5533d;
+}
+
+.coupon-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.coupon-value {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.coupon-name {
+  font-size: 26rpx;
+  color: #ff5000;
+}
+
+.coupon-none {
+  font-size: 26rpx;
+  color: #bbb;
+}
+
+.arrow {
+  font-size: 30rpx;
+  color: #ccc;
 }
 
 .label-row {
@@ -122,6 +163,22 @@ page {
   box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
 }
 
+.totals {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.total-line {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.total-line-off {
+  color: #e5533d;
+  margin-left: 12rpx;
+}
+
 .total {
   font-size: 26rpx;
   color: #666;
@@ -148,4 +205,89 @@ page {
 
 .submit-hover {
   opacity: 0.85;
+}
+
+.mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 11;
+  background: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 24rpx 24rpx calc(24rpx + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.sheet-title {
+  font-size: 30rpx;
+  color: #222;
+  font-weight: 600;
+  text-align: center;
+  padding-bottom: 12rpx;
+}
+
+.sheet-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 640rpx;
+}
+
+.sheet-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 8rpx;
+  border-bottom: 1rpx solid #f2f2f2;
+}
+
+.sheet-item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.sheet-item-name {
+  font-size: 28rpx;
+  color: #222;
+}
+
+.sheet-item-desc {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.sheet-item-value {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.sheet-item-off-amount {
+  font-size: 26rpx;
+  color: #e5533d;
+}
+
+.sheet-item-off .sheet-item-name,
+.sheet-item-off .sheet-item-desc {
+  color: #ccc;
+}
+
+.sheet-check {
+  font-size: 28rpx;
+  color: #ff6b35;
 }

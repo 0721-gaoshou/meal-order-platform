@@ -1,0 +1,38 @@
+<!--coupons.wxml-->
+<navigation-bar title="优惠券" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+
+<view class="tabs">
+  <view class="tab {{tab === 'center' ? 'tab-on' : ''}}" data-tab="center" bindtap="switchTab">领券中心</view>
+  <view class="tab {{tab === 'mine' ? 'tab-on' : ''}}" data-tab="mine" bindtap="switchTab">我的券</view>
+</view>
+
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="list" wx:if="{{tab === 'center'}}">
+    <view class="coupon" wx:for="{{center}}" wx:key="id">
+      <view class="coupon-left">
+        <view class="coupon-type">{{item.typeText}}</view>
+        <view class="coupon-time">{{item.timeText}}</view>
+        <view class="coupon-remain">{{item.remainText}}</view>
+      </view>
+      <view
+        class="coupon-btn {{item.received || item.remain <= 0 ? 'coupon-btn-off' : ''}}"
+        hover-class="dim"
+        data-id="{{item.id}}"
+        data-received="{{item.received}}"
+        bindtap="onTapReceive"
+      >{{item.received ? '已领取' : item.remain <= 0 ? '已抢光' : '领取'}}</view>
+    </view>
+    <view wx:if="{{!center.length && !loading}}" class="empty">暂无可领取的券</view>
+  </view>
+
+  <view class="list" wx:else>
+    <view class="coupon {{item.status !== 'UNUSED' ? 'coupon-dead' : ''}}" wx:for="{{mine}}" wx:key="id">
+      <view class="coupon-left">
+        <view class="coupon-type">{{item.name}}</view>
+        <view class="coupon-sub">{{item.typeText}} · {{item.timeText}}</view>
+      </view>
+      <view class="coupon-status">{{item.statusText}}</view>
+    </view>
+    <view wx:if="{{!mine.length && !loading}}" class="empty">还没有券，去领券中心看看</view>
+  </view>
+</scroll-view>
