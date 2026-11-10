@@ -1,13 +1,10 @@
 // 我的：登录态/用户名、券与订单入口、退出
-const api = require('../../utils/api')
-
 Page({
   data: {
     token: '',
     username: '',
     avatarText: '未',
     roleText: '',
-    loggingIn: false,
   },
 
   onShow() {
@@ -24,18 +21,7 @@ Page({
   },
 
   onTapLogin() {
-    if (this.data.loggingIn) return
-    this.setData({ loggingIn: true })
-    api
-      .login({ username: 'admin', password: 'admin123' })
-      .then((data) => {
-        wx.setStorageSync('token', data.accessToken)
-        wx.setStorageSync('username', data.username)
-        wx.setStorageSync('role', data.role)
-        this.setData({ loggingIn: false })
-        this.onShow()
-      })
-      .catch(() => this.setData({ loggingIn: false }))
+    wx.navigateTo({ url: '/pages/login/login' })
   },
 
   onTapLogout() {

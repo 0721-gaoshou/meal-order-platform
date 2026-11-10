@@ -3,12 +3,12 @@
     "pages/index/index",
     "pages/orders/orders",
     "pages/mine/mine",
-    "pages/goods/goods",
     "pages/goods-detail/goods-detail",
     "pages/cart/cart",
     "pages/checkout/checkout",
     "pages/coupons/coupons",
-    "pages/order-detail/order-detail"
+    "pages/order-detail/order-detail",
+    "pages/login/login"
   ],
   "tabBar": {
     "color": "#999999",

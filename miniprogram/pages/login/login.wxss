@@ -1,0 +1,87 @@
+/**login.wxss**/
+page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 40rpx;
+  padding: 80rpx 48rpx;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.brand-logo {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 32rpx;
+  background: #ff6b35;
+  color: #fff;
+  font-size: 56rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #222;
+  margin-top: 8rpx;
+}
+
+.brand-sub {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  background: #f8f8f8;
+  border-radius: 20rpx;
+  padding: 0 28rpx;
+}
+
+.field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24rpx;
+  padding: 30rpx 0;
+}
+
+.field-label {
+  width: 96rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.field-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #222;
+}
+
+.login-btn {
+  text-align: center;
+  padding: 22rpx 0;
+  border-radius: 44rpx;
+  font-size: 30rpx;
+}
+
+.dev-note {
+  text-align: center;
+  font-size: 22rpx;
+  color: #bbb;
+}

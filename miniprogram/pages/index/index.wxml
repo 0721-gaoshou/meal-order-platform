@@ -3,7 +3,7 @@
 
 <view class="login-strip" wx:if="{{!token}}">
   <text>登录后可加购下单</text>
-  <view class="strip-btn" hover-class="dim" bindtap="onTapLogin">{{loggingIn ? '登录中…' : '登录'}}</view>
+  <view class="strip-btn" hover-class="dim" bindtap="onTapLogin">登录</view>
 </view>
 
 <view class="search-wrap">

@@ -13,7 +13,6 @@ Page({
     loading: false,
     token: '',
     cartCount: 0,
-    loggingIn: false,
   },
 
   onLoad() {
@@ -93,18 +92,7 @@ Page({
   },
 
   onTapLogin() {
-    if (this.data.loggingIn) return
-    this.setData({ loggingIn: true })
-    api
-      .login({ username: 'admin', password: 'admin123' })
-      .then((data) => {
-        wx.setStorageSync('token', data.accessToken)
-        wx.setStorageSync('username', data.username)
-        wx.setStorageSync('role', data.role)
-        this.setData({ loggingIn: false, token: data.accessToken })
-        this.refreshCartCount()
-      })
-      .catch(() => this.setData({ loggingIn: false }))
+    wx.navigateTo({ url: '/pages/login/login' })
   },
 
   onTapAdd(e) {

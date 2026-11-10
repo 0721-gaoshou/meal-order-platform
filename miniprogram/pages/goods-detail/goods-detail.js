@@ -54,23 +54,11 @@ Page({
       .catch(() => this.setData({ loading: false }))
   },
 
-  // 开发期占位：无登录态时自动补登录，正式微信登录 M4 换掉
+  // 无登录态 → 引导去登录页（登录后返回再点一次）
   ensureLogin() {
-    return new Promise((resolve) => {
-      if (wx.getStorageSync('token')) {
-        resolve(true)
-        return
-      }
-      api
-        .login({ username: 'admin', password: 'admin123' })
-        .then((data) => {
-          wx.setStorageSync('token', data.accessToken)
-          wx.setStorageSync('username', data.username)
-          wx.setStorageSync('role', data.role)
-          resolve(true)
-        })
-        .catch(() => resolve(false))
-    })
+    if (wx.getStorageSync('token')) return Promise.resolve(true)
+    wx.navigateTo({ url: '/pages/login/login' })
+    return Promise.resolve(false)
   },
 
   selectedSku() {
