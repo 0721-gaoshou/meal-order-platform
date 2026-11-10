@@ -37,12 +37,30 @@ function cartClear() {
 }
 
 // ------- 结算与下单 -------
-function checkoutPreview(skuIds) {
-  return request({ url: '/checkout/preview', method: 'POST', data: { skuIds } })
+function checkoutPreview(skuIds, userCouponId) {
+  return request({ url: '/checkout/preview', method: 'POST', data: { skuIds, userCouponId } })
 }
 
 function orderCreate(data) {
   return request({ url: '/orders', method: 'POST', data })
+}
+
+// ------- 优惠券 -------
+function couponCenter() {
+  return request({ url: '/coupons' })
+}
+
+function couponReceive(couponId) {
+  return request({ url: '/coupons/' + couponId + '/receive', method: 'POST' })
+}
+
+function myCoupons() {
+  return request({ url: '/coupons/mine' })
+}
+
+// 结算页选券：按订单金额逐张给出可用性与预计优惠（amount 单位·分）
+function usableCoupons(amount) {
+  return request({ url: '/coupons/usable?amount=' + amount })
 }
 
 module.exports = {
@@ -56,4 +74,8 @@ module.exports = {
   cartClear,
   checkoutPreview,
   orderCreate,
+  couponCenter,
+  couponReceive,
+  myCoupons,
+  usableCoupons,
 }

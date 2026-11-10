@@ -32,6 +32,10 @@ Page({
     wx.navigateTo({ url: '/pages/cart/cart' })
   },
 
+  onTapCoupons() {
+    wx.navigateTo({ url: '/pages/coupons/coupons' })
+  },
+
   // 一键验证：小程序 → 后端 → MySQL 链路是否贯通
   onTapHealth() {
     if (this.data.checking) return

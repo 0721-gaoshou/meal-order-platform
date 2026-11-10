@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/goods/goods",
     "pages/cart/cart",
-    "pages/checkout/checkout"
+    "pages/checkout/checkout",
+    "pages/coupons/coupons"
   ],
   "window": {
     "navigationBarTextStyle": "black",

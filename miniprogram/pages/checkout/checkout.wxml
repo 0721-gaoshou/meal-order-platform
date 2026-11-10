@@ -8,7 +8,21 @@
           <view class="item-name">{{item.spuName}}</view>
           <view class="item-spec">{{item.skuSpec}} · ¥{{item.priceText}} × {{item.quantity}}</view>
         </view>
-        <view class="item-sub">¥{{item.subtotalText}}</view>
+        <view class="item-right">
+          <view class="item-sub">¥{{item.subtotalText}}</view>
+          <view class="item-share" wx:if="{{item.shareText}}">{{item.shareText}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="coupon-row" hover-class="dim" bindtap="openSheet">
+        <text class="label">优惠券</text>
+        <view class="coupon-value">
+          <text wx:if="{{couponName}}" class="coupon-name">{{couponName}} -¥{{discountText}}</text>
+          <text wx:else class="coupon-none">{{usableCount ? usableCount + ' 张可用' : '暂无可用'}}</text>
+          <text class="arrow">›</text>
+        </view>
       </view>
     </view>
 
@@ -26,7 +40,7 @@
       ></textarea>
     </view>
 
-    <view class="hint">数量与价格以服务端购物车实时值为准；库存不足会在提交时整体回滚</view>
+    <view class="hint">数量与价格以服务端购物车实时值为准；库存不足或券被抢用会在提交时整体回滚</view>
   </view>
 
   <view wx:else class="offline">
@@ -36,8 +50,9 @@
 </scroll-view>
 
 <view class="footer" wx:if="{{ready}}">
-  <view class="total">
-    实付 <text class="total-num">¥{{totalText}}</text>
+  <view class="totals">
+    <view class="total-line">合计 ¥{{totalText}}<text wx:if="{{discountText !== '0.00'}}" class="total-line-off">优惠 -¥{{discountText}}</text></view>
+    <view class="total">实付 <text class="total-num">¥{{payText}}</text></view>
   </view>
   <button
     class="submit"
@@ -48,4 +63,36 @@
   >
     提交订单
   </button>
+</view>
+
+<view class="mask" wx:if="{{sheet}}" bindtap="closeSheet"></view>
+<view class="sheet" wx:if="{{sheet}}">
+  <view class="sheet-title">选择优惠券</view>
+  <view class="sheet-list">
+    <view
+      class="sheet-item {{!item.usable ? 'sheet-item-off' : ''}}"
+      wx:for="{{usable}}"
+      wx:key="userCouponId"
+      data-id="{{item.userCouponId}}"
+      data-usable="{{item.usable}}"
+      bindtap="onPickCoupon"
+    >
+      <view class="sheet-item-main">
+        <view class="sheet-item-name">{{item.name}}</view>
+        <view class="sheet-item-desc">{{item.typeText}}<text wx:if="{{!item.usable}}"> · {{item.reason}}</text></view>
+      </view>
+      <view class="sheet-item-value">
+        <text wx:if="{{item.usable}}" class="sheet-item-off-amount">-¥{{item.estimatedText}}</text>
+        <text wx:if="{{userCouponId === item.userCouponId}}" class="sheet-check">✓</text>
+      </view>
+    </view>
+    <view class="sheet-item" data-id="" bindtap="onPickCoupon">
+      <view class="sheet-item-main">
+        <view class="sheet-item-name">不使用优惠券</view>
+      </view>
+      <view class="sheet-item-value">
+        <text wx:if="{{!userCouponId}}" class="sheet-check">✓</text>
+      </view>
+    </view>
+  </view>
 </view>
