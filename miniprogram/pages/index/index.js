@@ -127,6 +127,11 @@ Page({
       .catch(() => {})
   },
 
+  onTapGoods(e) {
+    const id = e.currentTarget.dataset.id
+    if (id) wx.navigateTo({ url: '/pages/goods-detail/goods-detail?id=' + id })
+  },
+
   onTapCart() {
     if (!this.data.token) {
       wx.showToast({ title: '请先登录', icon: 'none' })
