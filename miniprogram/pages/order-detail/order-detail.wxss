@@ -28,6 +28,23 @@ page {
   color: #fff;
 }
 
+.status-green {
+  background: #2ba471;
+}
+
+.status-grey {
+  background: #9b9b9b;
+}
+
+.status-countdown {
+  font-size: 24rpx;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8rpx;
+  padding: 4rpx 16rpx;
+  align-self: flex-start;
+}
+
 .status-name {
   font-size: 40rpx;
   font-weight: 600;

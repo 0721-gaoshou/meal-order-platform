@@ -14,6 +14,22 @@ const STATUS_TIP = {
   COMPLETED: '订单已完成，感谢光临',
   CLOSED: '订单已取消',
 }
+const STATUS_CARD_CLASS = {
+  PAID: 'status-green', MAKING: 'status-green', READY: 'status-green', COMPLETED: 'status-green',
+  CLOSED: 'status-grey', REFUNDING: 'status-grey', REFUNDED: 'status-grey',
+}
+
+function pad(n) {
+  return n < 10 ? '0' + n : '' + n
+}
+function countdownText(expireTime) {
+  if (!expireTime) return ''
+  const left = new Date(expireTime).getTime() - Date.now()
+  if (left <= 0) return '已超时，订单即将自动取消'
+  const m = Math.floor(left / 60000)
+  const s = Math.floor((left % 60000) / 1000)
+  return '剩余 ' + pad(m) + ':' + pad(s)
+}
 
 Page({
   data: {
@@ -36,7 +52,9 @@ Page({
             ...o,
             statusText: STATUS_TEXT[o.status] || o.status,
             statusTip: STATUS_TIP[o.status] || '',
+            statusCardClass: STATUS_CARD_CLASS[o.status] || '',
             pending: o.status === 'PENDING_PAY',
+            countdownText: o.status === 'PENDING_PAY' ? countdownText(o.expireTime) : '',
             createdText: (o.createdAt || '').replace('T', ' ').slice(0, 16),
             expireText: (o.expireTime || '').replace('T', ' ').slice(0, 16),
             payTimeText: o.payTime ? o.payTime.replace('T', ' ').slice(0, 16) : '',
@@ -51,7 +69,16 @@ Page({
             })),
           },
         })
+        if (o.status === 'PENDING_PAY') {
+          this.timer = setInterval(() => {
+            this.setData({ ['order.countdownText']: countdownText(o.expireTime) })
+          }, 1000)
+        }
       })
       .catch(() => this.setData({ loading: false }))
+  },
+
+  onUnload() {
+    if (this.timer) clearInterval(this.timer)
   },
 })

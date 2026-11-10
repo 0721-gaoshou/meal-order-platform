@@ -4,30 +4,51 @@
 <view class="tabs">
   <view class="tab {{tab === 'ALL' ? 'tab-on' : ''}}" data-tab="ALL" bindtap="switchTab">全部</view>
   <view class="tab {{tab === 'PENDING_PAY' ? 'tab-on' : ''}}" data-tab="PENDING_PAY" bindtap="switchTab">待支付</view>
+  <view class="tab {{tab === 'COMPLETED' ? 'tab-on' : ''}}" data-tab="COMPLETED" bindtap="switchTab">已完成</view>
 </view>
 
 <scroll-view class="scrollarea" scroll-y type="list" bindscrolltolower="onReachBottom">
   <view class="list" wx:if="{{token}}">
+    <!-- 骨架屏：首屏加载中 -->
+    <block wx:if="{{loading && !list.length}}">
+      <view class="order-card" wx:for="{{[1,2,3]}}" wx:key="*this">
+        <view class="sk sk-line" style="width: 45%"></view>
+        <view class="sk sk-line" style="width: 70%"></view>
+        <view class="sk sk-line" style="width: 30%"></view>
+      </view>
+    </block>
+
     <view class="order-card" wx:for="{{list}}" wx:key="id" hover-class="dim" data-id="{{item.id}}" bindtap="onTapOrder">
       <view class="order-head">
         <text class="order-no">单号 {{item.orderNo}}</text>
-        <text class="tag {{item.pending ? '' : 'tag-grey'}}">{{item.statusText}}</text>
+        <text class="tag {{item.statusClass}}">{{item.statusText}}</text>
       </view>
       <view class="order-summary ellipsis">{{item.summary}}</view>
+      <view class="order-meta" wx:if="{{item.countdownText}}">
+        <text class="countdown">{{item.countdownText}}</text>
+      </view>
       <view class="order-foot">
-        <text class="order-time">{{item.createdText}}</text>
+        <view class="order-time-wrap">
+          <text class="order-time">{{item.createdText}}</text>
+          <text class="order-discount" wx:if="{{item.discountText}}">{{item.discountText}}</text>
+        </view>
         <view class="order-amount">
           实付 <text class="price"><text class="price-unit">¥</text>{{item.payText}}</text>
         </view>
       </view>
     </view>
-    <view wx:if="{{!list.length && !loading}}" class="empty">还没有订单，去点一单吧</view>
-    <view wx:if="{{loading}}" class="list-tip">加载中…</view>
+
+    <view wx:if="{{!list.length && !loading}}" class="empty">
+      <view class="empty-art"><view class="empty-circle"></view><view class="empty-bar"></view></view>
+      <view>还没有订单，去点一单吧</view>
+    </view>
+    <view wx:if="{{loading && list.length}}" class="list-tip">加载中…</view>
     <view wx:if="{{!hasMore && list.length}}" class="list-tip">— 到底了 —</view>
   </view>
 
   <view wx:else class="empty">
+    <view class="empty-art"><view class="empty-circle"></view><view class="empty-bar"></view></view>
     <view>登录后查看你的订单</view>
-    <view class="btn-accent login-btn" hover-class="dim" bindtap="onTapLogin">{{loggingIn ? '登录中…' : '登录'}}</view>
+    <view class="btn-accent login-btn" hover-class="dim" bindtap="onTapLogin">去登录</view>
   </view>
 </scroll-view>

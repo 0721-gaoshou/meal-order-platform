@@ -3,9 +3,10 @@
 
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="body" wx:if="{{order}}">
-    <view class="status-card">
+    <view class="status-card {{order.statusCardClass}}">
       <view class="status-name">{{order.statusText}}</view>
       <view class="status-tip" wx:if="{{order.statusTip}}">{{order.statusTip}}</view>
+      <view class="status-countdown" wx:if="{{order.countdownText}}">{{order.countdownText}}</view>
       <view class="status-no">单号 {{order.orderNo}}</view>
     </view>
 
