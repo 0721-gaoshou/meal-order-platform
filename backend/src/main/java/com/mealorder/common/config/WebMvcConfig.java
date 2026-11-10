@@ -25,6 +25,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         String[] whitelist = {
                 "/auth/login", "/auth/refresh", "/auth/logout",
                 "/health",
+                // C 端公开商品浏览（下单/购物车仍需登录）
+                "/public/**",
                 // Knife4j / springdoc 文档资源
                 "/doc.html", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**",
                 "/favicon.ico"

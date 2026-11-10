@@ -1,66 +1,210 @@
-/**index.wxss**/
+/**index.wxss 首页**/
 page {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background: #f6f6f6;
 }
+
+.login-strip {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16rpx 24rpx 0;
+  padding: 16rpx 24rpx;
+  background: #fff2ec;
+  border-radius: 14rpx;
+  font-size: 24rpx;
+  color: #b25a2f;
+}
+
+.strip-btn {
+  padding: 8rpx 28rpx;
+  background: #ff6b35;
+  color: #fff;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+}
+
+.search-wrap {
+  padding: 20rpx 24rpx 8rpx;
+}
+
+.search {
+  height: 72rpx;
+  background: #fff;
+  border-radius: 36rpx;
+  padding: 0 32rpx;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.search-ph {
+  color: #bbb;
+}
+
+/* Skyline 下 scroll-view 必须有确定高度，否则整行塌成 0 */
+.cats {
+  height: 92rpx;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.cats-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+  padding: 0 24rpx;
+  height: 92rpx;
+}
+
+.cat {
+  padding: 10rpx 28rpx;
+  background: #fff;
+  color: #666;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  flex-shrink: 0;
+}
+
+.cat-on {
+  background: #ff6b35;
+  color: #fff;
+  font-weight: 600;
+}
+
 .scrollarea {
   flex: 1;
   overflow-y: hidden;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24rpx;
-  padding-top: 120rpx;
-}
-
-.login-card,
-.entry-card {
+.list {
   display: flex;
   flex-direction: column;
   gap: 20rpx;
-  width: 560rpx;
-  padding: 32rpx;
+  padding: 16rpx 24rpx 180rpx;
+}
+
+.goods-card {
+  display: flex;
+  flex-direction: row;
+  gap: 20rpx;
   background: #fff;
   border-radius: 20rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+  padding: 24rpx;
 }
 
-.tip {
+.goods-thumb {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 16rpx;
+  flex-shrink: 0;
+}
+
+.goods-thumb-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f2f2f2;
+  color: #c8c8c8;
   font-size: 26rpx;
-  color: #8a8a8a;
-  text-align: center;
 }
 
-.btn-accent {
+.goods-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  min-width: 0;
+}
+
+.goods-name {
+  font-size: 30rpx;
+  color: #222;
+  font-weight: 600;
+}
+
+.goods-tags {
+  display: flex;
+  flex-direction: row;
+  gap: 8rpx;
+}
+
+.goods-desc {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.goods-bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4rpx;
+}
+
+.goods-price-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 12rpx;
+}
+
+.price {
+  font-size: 32rpx;
+}
+
+.goods-spec {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.add-btn {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
   background: #ff6b35;
   color: #fff;
-  border-radius: 14rpx;
-  font-size: 30rpx;
+  font-size: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.btn-ghost {
+.list-tip {
+  text-align: center;
+  color: #bbb;
+  font-size: 22rpx;
+  padding: 20rpx 0;
+}
+
+.cart-float {
+  position: fixed;
+  right: 32rpx;
+  bottom: 140rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8rpx;
+  padding: 20rpx 32rpx;
   background: #fff;
   color: #ff6b35;
-  border: 2rpx solid #ff6b35;
-  border-radius: 14rpx;
-  font-size: 30rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.12);
 }
 
-/* 触屏反馈用灰色按压态，不依赖系统蓝 */
-.btn-active {
-  background: #f2f2f2 !important;
-  color: #666 !important;
-  opacity: 0.85;
-}
-
-.health-result {
-  font-size: 26rpx;
-  color: #666;
-  padding: 0 40rpx;
-  text-align: center;
-  word-break: break-all;
+.cart-badge {
+  min-width: 32rpx;
+  height: 32rpx;
+  padding: 0 8rpx;
+  background: #ff5000;
+  color: #fff;
+  border-radius: 16rpx;
+  font-size: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

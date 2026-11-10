@@ -1,0 +1,38 @@
+<!--mine.wxml-->
+<navigation-bar title="我的" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="body">
+    <view class="profile">
+      <view class="avatar {{token ? '' : 'avatar-guest'}}">{{avatarText}}</view>
+      <view class="profile-info">
+        <view class="profile-name">{{token ? username : '未登录'}}</view>
+        <view class="profile-sub">
+          <text class="tag tag-grey" wx:if="{{roleText}}">{{roleText}}</text>
+          <text class="profile-tip" wx:if="{{!token}}">登录后可查看订单与优惠券</text>
+        </view>
+      </view>
+      <view wx:if="{{!token}}" class="profile-btn" hover-class="dim" bindtap="onTapLogin">{{loggingIn ? '登录中…' : '登录'}}</view>
+    </view>
+
+    <view class="menu">
+      <view class="menu-item" hover-class="menu-hover" bindtap="onTapOrders">
+        <text>我的订单</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="divider"></view>
+      <view class="menu-item" hover-class="menu-hover" bindtap="onTapCoupons">
+        <text>优惠券</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="divider"></view>
+      <view class="menu-item" hover-class="menu-hover" bindtap="onTapCart">
+        <text>购物车</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="logout" wx:if="{{token}}" hover-class="dim" bindtap="onTapLogout">退出登录</view>
+    <view class="about">meal-order-platform · 开发版</view>
+  </view>
+</scroll-view>

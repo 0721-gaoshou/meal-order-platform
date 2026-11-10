@@ -1,0 +1,62 @@
+<!--order-detail.wxml-->
+<navigation-bar title="订单详情" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="body" wx:if="{{order}}">
+    <view class="status-card">
+      <view class="status-name">{{order.statusText}}</view>
+      <view class="status-tip" wx:if="{{order.statusTip}}">{{order.statusTip}}</view>
+      <view class="status-no">单号 {{order.orderNo}}</view>
+    </view>
+
+    <view class="card items">
+      <view class="item" wx:for="{{order.items}}" wx:key="skuId">
+        <view class="item-main">
+          <view class="item-name">{{item.spuName}}</view>
+          <view class="item-spec">{{item.skuSpec}} · ¥{{item.unitPriceText}} × {{item.quantity}}</view>
+        </view>
+        <view class="item-right">
+          <view class="item-sub">{{item.subtotalText}}</view>
+          <view class="item-share" wx:if="{{item.shareText}}">{{item.shareText}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card amounts">
+      <view class="amount-row">
+        <text>商品总额</text>
+        <text>¥{{order.totalText}}</text>
+      </view>
+      <view class="amount-row" wx:if="{{order.discountAmount > 0}}">
+        <text>优惠</text>
+        <text class="amount-off">-¥{{order.discountText}}</text>
+      </view>
+      <view class="divider"></view>
+      <view class="amount-row amount-pay">
+        <text>实付</text>
+        <text class="price"><text class="price-unit">¥</text>{{order.payText}}</text>
+      </view>
+    </view>
+
+    <view class="card info">
+      <view class="info-row" wx:if="{{order.remark}}">
+        <text class="info-label">备注</text>
+        <text class="info-value">{{order.remark}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">下单时间</text>
+        <text class="info-value">{{order.createdText}}</text>
+      </view>
+      <view class="info-row" wx:if="{{order.pending}}">
+        <text class="info-label">支付截止</text>
+        <text class="info-value">{{order.expireText}}</text>
+      </view>
+      <view class="info-row" wx:if="{{order.payTimeText}}">
+        <text class="info-label">支付时间</text>
+        <text class="info-value">{{order.payTimeText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:elif="{{!loading}}" class="empty">订单不存在或无权查看</view>
+</scroll-view>

@@ -1,11 +1,25 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/orders/orders",
+    "pages/mine/mine",
     "pages/goods/goods",
     "pages/cart/cart",
     "pages/checkout/checkout",
-    "pages/coupons/coupons"
+    "pages/coupons/coupons",
+    "pages/order-detail/order-detail"
   ],
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#ff6b35",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "点餐" },
+      { "pagePath": "pages/orders/orders", "text": "订单" },
+      { "pagePath": "pages/mine/mine", "text": "我的" }
+    ]
+  },
   "window": {
     "navigationBarTextStyle": "black",
     "navigationStyle": "custom"

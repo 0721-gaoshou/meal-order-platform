@@ -1,0 +1,104 @@
+/**orders.wxss**/
+page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f6f6f6;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  gap: 40rpx;
+  padding: 0 32rpx;
+  background: #fff;
+}
+
+.tab {
+  padding: 22rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  border-bottom: 4rpx solid transparent;
+}
+
+.tab-on {
+  color: #ff6b35;
+  font-weight: 600;
+  border-bottom-color: #ff6b35;
+}
+
+.scrollarea {
+  flex: 1;
+  overflow-y: hidden;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  padding: 24rpx;
+}
+
+.order-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+}
+
+.order-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-no {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.order-summary {
+  font-size: 28rpx;
+  color: #222;
+}
+
+.order-foot {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-time {
+  font-size: 22rpx;
+  color: #bbb;
+}
+
+.order-amount {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.price {
+  font-size: 32rpx;
+}
+
+.list-tip {
+  text-align: center;
+  color: #bbb;
+  font-size: 22rpx;
+  padding: 20rpx 0;
+}
+
+.login-btn {
+  margin-top: 12rpx;
+  padding: 16rpx 64rpx;
+  text-align: center;
+  color: #fff;
+  background: #ff6b35;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+}
