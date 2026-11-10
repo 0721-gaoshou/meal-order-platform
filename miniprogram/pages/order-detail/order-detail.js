@@ -1,4 +1,4 @@
-// 订单详情
+// 订单详情：状态/倒计时 + 待支付操作（Mock 支付、取消）
 const api = require('../../utils/api')
 const { fenToYuan } = require('../../utils/money')
 
@@ -35,6 +35,7 @@ Page({
   data: {
     order: null,
     loading: true,
+    paying: false,
   },
 
   onLoad(query) {
@@ -43,8 +44,17 @@ Page({
       setTimeout(() => wx.navigateBack(), 600)
       return
     }
+    this.orderId = query.id
+    this.load()
+  },
+
+  load() {
+    if (this.timer) {
+      clearInterval(this.timer)
+      this.timer = null
+    }
     api
-      .orderDetail(query.id)
+      .orderDetail(this.orderId)
       .then((o) => {
         this.setData({
           loading: false,
@@ -76,6 +86,41 @@ Page({
         }
       })
       .catch(() => this.setData({ loading: false }))
+  },
+
+  // Mock 支付：发起拿商户单号 → 模拟渠道回调 → 刷新状态（正式微信支付 M9 替换回调来源）
+  onTapPay() {
+    if (this.data.paying) return
+    this.setData({ paying: true })
+    api
+      .orderPay(this.orderId)
+      .then((pay) =>
+        api.payMockCallback({ outTradeNo: pay.outTradeNo, tradeNo: 'MOCK' + Date.now() })
+      )
+      .then(() => {
+        this.setData({ paying: false })
+        wx.showToast({ title: '支付成功', icon: 'success' })
+        setTimeout(() => this.load(), 600)
+      })
+      .catch(() => this.setData({ paying: false }))
+  },
+
+  onTapCancel() {
+    wx.showModal({
+      title: '取消订单',
+      content: '取消后库存与优惠券将退回，确定取消吗？',
+      confirmColor: '#ff6b35',
+      success: (res) => {
+        if (!res.confirm) return
+        api
+          .orderCancel(this.orderId)
+          .then(() => {
+            wx.showToast({ title: '订单已取消', icon: 'none' })
+            setTimeout(() => this.load(), 600)
+          })
+          .catch(() => {})
+      },
+    })
   },
 
   onUnload() {

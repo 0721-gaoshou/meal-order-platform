@@ -67,6 +67,19 @@ function orderDetail(id) {
   return request({ url: '/orders/' + id })
 }
 
+// ------- 支付（Mock 网关）与取消 -------
+function orderPay(orderId) {
+  return request({ url: '/pay/orders/' + orderId, method: 'POST' })
+}
+
+function payMockCallback(data) {
+  return request({ url: '/pay/mock-callback', method: 'POST', data })
+}
+
+function orderCancel(orderId) {
+  return request({ url: '/orders/' + orderId + '/cancel', method: 'POST' })
+}
+
 // ------- 优惠券 -------
 function couponCenter() {
   return request({ url: '/coupons' })
@@ -94,6 +107,9 @@ module.exports = {
   publicSpuDetail,
   ordersPage,
   orderDetail,
+  orderPay,
+  payMockCallback,
+  orderCancel,
   cartList,
   cartAdd,
   cartUpdateQuantity,

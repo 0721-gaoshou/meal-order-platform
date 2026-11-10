@@ -17,4 +17,9 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
             + "WHERE id = #{id} AND user_id = #{userId} AND status = 'UNUSED'")
     int markUsed(@Param("id") Long id, @Param("userId") Long userId,
                  @Param("orderId") Long orderId, @Param("usedTime") LocalDateTime usedTime);
+
+    /** 取消订单返还券（§4.7：仅未过期券返还，调用方负责判断有效期） */
+    @Update("UPDATE user_coupon SET status = 'UNUSED', used_order_id = NULL, used_time = NULL "
+            + "WHERE id = #{id} AND user_id = #{userId} AND status = 'USED' AND used_order_id = #{orderId}")
+    int restoreToUnused(@Param("id") Long id, @Param("userId") Long userId, @Param("orderId") Long orderId);
 }
