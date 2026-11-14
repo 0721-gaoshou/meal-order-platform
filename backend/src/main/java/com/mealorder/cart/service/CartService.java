@@ -34,6 +34,7 @@ public class CartService {
     private final StringRedisTemplate redis;
     private final SkuMapper skuMapper;
     private final SpuMapper spuMapper;
+    private final com.mealorder.behavior.service.BehaviorTracker behaviorTracker;
 
     public void add(Long userId, Long skuId, Integer quantity) {
         Sku sku = requireOnSaleSku(skuId);
@@ -45,6 +46,7 @@ public class CartService {
             redis.opsForHash().increment(key, field, -quantity);
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "库存不足，当前仅剩 " + sku.getStock() + " 件");
         }
+        behaviorTracker.record(userId, sku.getSpuId(), "ADD_CART", "cart");
     }
 
     public void updateQuantity(Long userId, Long skuId, Integer quantity) {

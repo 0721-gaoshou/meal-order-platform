@@ -72,6 +72,11 @@ order:
     delay-queue: order.delay.queue
     routing-key: order.delay.cancel
 
+# 埋点管道（M5）：业务入队 + 定时批量落库；flush-ms 非默认值（代码默认 5000），用于证明配置被读到
+behavior:
+  flush-ms: 2000
+  batch-size: 200
+
 # RustFS（S3 兼容对象存储），容器见 docker/docker-compose.yml
 rustfs:
   endpoint: http://localhost:9000

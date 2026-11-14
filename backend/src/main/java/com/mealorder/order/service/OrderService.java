@@ -54,6 +54,7 @@ public class OrderService {
     private final UserCouponMapper userCouponMapper;
     private final OrderCancelService orderCancelService;
     private final com.mealorder.mq.OrderDelayProducer orderDelayProducer;
+    private final com.mealorder.behavior.service.BehaviorTracker behaviorTracker;
 
     @Value("${order.expire-minutes}")
     private long expireMinutes;
@@ -161,6 +162,7 @@ public class OrderService {
                 } catch (Exception ex) {
                     log.warn("订单已提交但延迟取消消息投递失败，兜底扫表接管: orderNo={}", order.getOrderNo(), ex);
                 }
+                behaviorTracker.record(order.getUserId(), null, "ORDER", "checkout");
             }
         });
         return toVO(order, itemsOf(order.getId()));
