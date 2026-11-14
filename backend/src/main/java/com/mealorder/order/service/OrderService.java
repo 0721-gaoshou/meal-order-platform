@@ -53,6 +53,7 @@ public class OrderService {
     private final UserCouponService userCouponService;
     private final UserCouponMapper userCouponMapper;
     private final OrderCancelService orderCancelService;
+    private final com.mealorder.mq.OrderDelayProducer orderDelayProducer;
 
     @Value("${order.expire-minutes}")
     private long expireMinutes;
@@ -153,6 +154,12 @@ public class OrderService {
                     redis.opsForHash().delete(cartKey, fields);
                 } catch (Exception ex) {
                     log.warn("订单已提交但购物车清理失败: orderNo={}", order.getOrderNo(), ex);
+                }
+                // M5 延迟取消主通道：提交后才投递，避免消息先于订单行可见；失败由扫表兜底接管
+                try {
+                    orderDelayProducer.sendCancelDelay(order.getId(), order.getExpireTime());
+                } catch (Exception ex) {
+                    log.warn("订单已提交但延迟取消消息投递失败，兜底扫表接管: orderNo={}", order.getOrderNo(), ex);
                 }
             }
         });
