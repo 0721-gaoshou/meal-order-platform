@@ -50,4 +50,16 @@ public final class PayDtos {
     public record MockRefundCallbackRequest(
             @NotBlank(message = "缺少退款单号") String refundNo) {
     }
+
+    /** 对账不一致明细：type = PAY_PAID_ORDER_NOT_PAID / ORDER_PAID_NO_PAY_LOG */
+    public record ReconcileMismatch(
+            @JsonSerialize(using = ToStringSerializer.class) Long orderId,
+            String orderNo,
+            String type,
+            String orderStatus) {
+    }
+
+    /** 对账结果：只报告不自动改数；intervalMs 回显配置值便于证明被读到 */
+    public record ReconcileResultVO(int count, java.util.List<ReconcileMismatch> mismatches, long intervalMs) {
+    }
 }

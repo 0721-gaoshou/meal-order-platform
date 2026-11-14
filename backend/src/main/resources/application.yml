@@ -77,6 +77,10 @@ behavior:
   flush-ms: 2000
   batch-size: 200
 
+# 支付对账（M5）：定时双向对账间隔；非默认值（代码默认 60000），验收靠日志出现周期证明被读到
+pay:
+  reconcile-ms: 15000
+
 # RustFS（S3 兼容对象存储），容器见 docker/docker-compose.yml
 rustfs:
   endpoint: http://localhost:9000
