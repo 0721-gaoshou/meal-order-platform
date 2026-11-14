@@ -40,7 +40,8 @@ services:
       - redis-data:/data
 
   rabbitmq:
-    image: rabbitmq:3.13-management
+    build: ./rabbitmq
+    image: meal-rabbitmq:3.13-delayed
     container_name: meal-rabbitmq
     restart: unless-stopped
     ports:
@@ -48,7 +49,7 @@ services:
       - "15672:15672"    # 管理控制台 guest/guest
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
-    # M5 将替换为带延迟插件的自定义构建（docker/rabbitmq/Dockerfile）
+    # M5 定制镜像：官方 3.13-management + rabbitmq_delayed_message_exchange（见 rabbitmq/Dockerfile）
 
   rustfs:
     image: rustfs/rustfs
