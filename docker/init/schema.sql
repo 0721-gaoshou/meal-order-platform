@@ -217,7 +217,7 @@ CREATE TABLE `user_behavior` (
   `id`         BIGINT UNSIGNED NOT NULL COMMENT '雪花ID',
   `user_id`    BIGINT UNSIGNED NOT NULL COMMENT '用户ID',
   `item_id`    BIGINT UNSIGNED NULL COMMENT '商品ID -> spu.id(搜索等无商品场景为NULL)',
-  `action`     VARCHAR(20)     NOT NULL COMMENT 'EXPOSED曝光/CLICK点击/ADD_CART加购/ORDER下单',
+  `action`     VARCHAR(20)     NOT NULL COMMENT 'EXPOSED曝光/CLICK点击/ADD_CART加购/ORDER下单/PAY支付/COUPON_RECEIVE领券',
   `scene`      VARCHAR(32)     NOT NULL DEFAULT '' COMMENT '场景: home/detail/search/recommend',
   `created_at` DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '行为时间',
   PRIMARY KEY (`id`),

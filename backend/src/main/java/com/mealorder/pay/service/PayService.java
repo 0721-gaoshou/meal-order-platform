@@ -28,6 +28,7 @@ public class PayService {
 
     private final OrderMapper orderMapper;
     private final PayLogMapper payLogMapper;
+    private final com.mealorder.behavior.service.BehaviorTracker behaviorTracker;
 
     @Transactional
     public PayCreateVO create(Long userId, Long orderId) {
@@ -98,6 +99,7 @@ public class PayService {
             // uk(out_trade_no, trade_no)：同一渠道单号被不同支付单复用
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "渠道单号已被其他支付单使用");
         }
+        behaviorTracker.record(order.getUserId(), null, "PAY", "pay");
         return new PayResultVO(order.getId(), order.getStatus(), payLog.getOutTradeNo(),
                 payLog.getTradeNo(), payLog.getAmount());
     }

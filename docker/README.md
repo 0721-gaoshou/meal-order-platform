@@ -28,7 +28,7 @@ sudo service docker restart
 |---|---|---|
 | MySQL 8.0 | 3306 | root / meal_root_2026，默认库 `meal_order`，utf8mb4 |
 | Redis 7.2 | 6379 | 无密码（本地开发） |
-| RabbitMQ | 5672 / 15672 | guest / guest，控制台 http://localhost:15672 |
+| RabbitMQ | 5672 / 15672 | guest / guest，控制台 http://localhost:15672；定制镜像 `meal-rabbitmq:3.13-delayed`（带延迟交换机插件，见 `rabbitmq/Dockerfile`） |
 | RustFS（S3 兼容对象存储） | 9000 | mealadmin / mealadmin123；控制台暂不可用（上游 bug），建桶走后端代码或 mc 客户端 |
 
 ## 与 Dify 共存

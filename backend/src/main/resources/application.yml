@@ -19,6 +19,11 @@ spring:
       timeout: 3s
       # 非默认值，redis-cli CLIENT LIST 可见，用于证明配置被读到
       client-name: meal-order-backend
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
   servlet:
     multipart:
       # 商品图片上传限制；RustFS 单图 5MB 足够
@@ -61,6 +66,20 @@ order:
   expire-minutes: 30
   # 超时订单扫描间隔（M5 兜底任务；开发期 10s 便于观察）
   timeout-scan-ms: 10000
+  # M5 延迟取消主通道：x-delayed-message 交换机 + 队列 + 路由键（management 控制台可见）
+  mq:
+    delay-exchange: order.delay.exchange
+    delay-queue: order.delay.queue
+    routing-key: order.delay.cancel
+
+# 埋点管道（M5）：业务入队 + 定时批量落库；flush-ms 非默认值（代码默认 5000），用于证明配置被读到
+behavior:
+  flush-ms: 2000
+  batch-size: 200
+
+# 支付对账（M5）：定时双向对账间隔；非默认值（代码默认 60000），验收靠日志出现周期证明被读到
+pay:
+  reconcile-ms: 15000
 
 # RustFS（S3 兼容对象存储），容器见 docker/docker-compose.yml
 rustfs:

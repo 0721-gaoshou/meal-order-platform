@@ -31,6 +31,7 @@ public class UserCouponService {
 
     private final CouponMapper couponMapper;
     private final UserCouponMapper userCouponMapper;
+    private final com.mealorder.behavior.service.BehaviorTracker behaviorTracker;
 
     @Transactional(rollbackFor = Exception.class)
     public UserCouponVO receive(Long userId, Long couponId) {
@@ -66,6 +67,7 @@ public class UserCouponService {
         } catch (DuplicateKeyException e) {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "已领取过该券");
         }
+        behaviorTracker.record(userId, null, "COUPON_RECEIVE", "coupon");
         return toVO(userCoupon, coupon, now);
     }
 
