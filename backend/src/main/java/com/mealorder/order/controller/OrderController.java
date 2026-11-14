@@ -38,6 +38,13 @@ public class OrderController {
         return R.ok(orderService.create(UserContext.get().userId(), request));
     }
 
+    @Operation(summary = "取消待支付订单（回补库存 + 未过期券返还）")
+    @PostMapping("/{id}/cancel")
+    public R<Void> cancel(@PathVariable Long id) {
+        orderService.cancel(UserContext.get().userId(), id);
+        return R.ok();
+    }
+
     @Operation(summary = "我的订单分页（status 可选筛选）")
     @GetMapping("/page")
     public R<Page<OrderVO>> page(@ModelAttribute OrderQuery query) {

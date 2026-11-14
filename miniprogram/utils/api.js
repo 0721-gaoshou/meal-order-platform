@@ -67,6 +67,27 @@ function orderDetail(id) {
   return request({ url: '/orders/' + id })
 }
 
+// ------- 支付（Mock 网关）与取消 -------
+function orderPay(orderId) {
+  return request({ url: '/pay/orders/' + orderId, method: 'POST' })
+}
+
+function payMockCallback(data) {
+  return request({ url: '/pay/mock-callback', method: 'POST', data })
+}
+
+function orderCancel(orderId) {
+  return request({ url: '/orders/' + orderId + '/cancel', method: 'POST' })
+}
+
+function orderRefund(orderId, data) {
+  return request({ url: '/pay/orders/' + orderId + '/refund', method: 'POST', data })
+}
+
+function refundMockCallback(data) {
+  return request({ url: '/pay/mock-refund-callback', method: 'POST', data })
+}
+
 // ------- 优惠券 -------
 function couponCenter() {
   return request({ url: '/coupons' })
@@ -94,6 +115,11 @@ module.exports = {
   publicSpuDetail,
   ordersPage,
   orderDetail,
+  orderPay,
+  payMockCallback,
+  orderCancel,
+  orderRefund,
+  refundMockCallback,
   cartList,
   cartAdd,
   cartUpdateQuantity,

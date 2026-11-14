@@ -61,3 +61,12 @@
 
   <view wx:elif="{{!loading}}" class="empty">订单不存在或无权查看</view>
 </scroll-view>
+
+<view class="footer" wx:if="{{order && order.pending}}">
+  <view class="btn-ghost footer-btn" hover-class="dim" bindtap="onTapCancel">取消订单</view>
+  <view class="btn-accent footer-btn" hover-class="dim" bindtap="onTapPay">{{paying ? '支付中…' : '立即支付'}}</view>
+</view>
+
+<view class="footer" wx:if="{{order && order.refundable}}">
+  <view class="refund-btn" hover-class="dim" bindtap="onTapRefund">{{refunding ? '退款处理中…' : '申请退款'}}</view>
+</view>

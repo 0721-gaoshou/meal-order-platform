@@ -87,4 +87,8 @@ public final class OrderDtos {
             return pageSize == null || pageSize < 1 || pageSize > 100 ? 10 : pageSize;
         }
     }
+
+    /** 管理端订单状态流转：只允许 PAID→MAKING→READY→COMPLETED */
+    public record OrderStatusRequest(@NotBlank(message = "缺少目标状态") String status) {
+    }
 }

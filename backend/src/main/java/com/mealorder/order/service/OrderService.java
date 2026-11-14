@@ -52,6 +52,7 @@ public class OrderService {
     private final StringRedisTemplate redis;
     private final UserCouponService userCouponService;
     private final UserCouponMapper userCouponMapper;
+    private final OrderCancelService orderCancelService;
 
     @Value("${order.expire-minutes}")
     private long expireMinutes;
@@ -158,12 +159,62 @@ public class OrderService {
         return toVO(order, itemsOf(order.getId()));
     }
 
+    /**
+     * 取消待支付订单（用户主动）：校验归属与状态后走统一取消出口
+     * （超时自动取消复用同一出口 OrderCancelService）
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void cancel(Long userId, Long orderId) {
+        Order order = orderMapper.selectById(orderId);
+        if (order == null || !order.getUserId().equals(userId)) {
+            throw new BusinessException(ResultCode.NOT_FOUND, "订单不存在");
+        }
+        if (!"PENDING_PAY".equals(order.getStatus())) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR, "只能取消待支付订单");
+        }
+        if (!orderCancelService.cancel(order)) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR, "订单状态已变化，请刷新后重试");
+        }
+    }
+
     public Page<OrderVO> page(Long userId, OrderQuery query) {
         Page<Order> page = orderMapper.selectPage(new Page<>(query.page(), query.size()),
                 new LambdaQueryWrapper<Order>()
                         .eq(Order::getUserId, userId)
                         .eq(query.status() != null && !query.status().isBlank(), Order::getStatus, query.status())
                         .orderByDesc(Order::getCreatedAt));
+        return toVOPage(page);
+    }
+
+    /** 管理端订单分页：全量（M4 状态流转演示；多商家隔离后续按 merchant_id 加条件） */
+    public Page<OrderVO> adminPage(OrderQuery query) {
+        Page<Order> page = orderMapper.selectPage(new Page<>(query.page(), query.size()),
+                new LambdaQueryWrapper<Order>()
+                        .eq(query.status() != null && !query.status().isBlank(), Order::getStatus, query.status())
+                        .orderByDesc(Order::getCreatedAt));
+        return toVOPage(page);
+    }
+
+    private static final Map<String, String> NEXT_STATUS = Map.of(
+            "PAID", "MAKING", "MAKING", "READY", "READY", "COMPLETED");
+
+    /** 商家/管理员推进订单状态：只允许 PAID→MAKING→READY→COMPLETED，跳态拒绝 */
+    public void transitionStatus(Long id, String to) {
+        Order order = orderMapper.selectById(id);
+        if (order == null) {
+            throw new BusinessException(ResultCode.NOT_FOUND, "订单不存在");
+        }
+        String expected = NEXT_STATUS.get(order.getStatus());
+        if (expected == null || !expected.equals(to)) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR,
+                    "不允许的状态流转：" + order.getStatus() + " → " + to);
+        }
+        if (orderMapper.transit(id, order.getStatus(), to) == 0) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR, "订单状态已变化，请刷新后重试");
+        }
+    }
+
+    private Page<OrderVO> toVOPage(Page<Order> page) {
         List<Long> orderIds = page.getRecords().stream().map(Order::getId).toList();
         Map<Long, List<OrderItem>> itemMap = orderIds.isEmpty() ? Map.of()
                 : orderItemMapper.selectList(new LambdaQueryWrapper<OrderItem>().in(OrderItem::getOrderId, orderIds))

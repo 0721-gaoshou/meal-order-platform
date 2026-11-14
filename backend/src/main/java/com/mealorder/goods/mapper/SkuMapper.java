@@ -13,4 +13,8 @@ public interface SkuMapper extends BaseMapper<Sku> {
      */
     @Update("UPDATE sku SET stock = stock - #{quantity} WHERE id = #{skuId} AND stock >= #{quantity} AND deleted = 0")
     int deductStock(@Param("skuId") Long skuId, @Param("quantity") Integer quantity);
+
+    /** 取消订单回补库存 */
+    @Update("UPDATE sku SET stock = stock + #{quantity} WHERE id = #{skuId}")
+    int restoreStock(@Param("skuId") Long skuId, @Param("quantity") Integer quantity);
 }
