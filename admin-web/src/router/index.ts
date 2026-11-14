@@ -33,6 +33,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/goods/CategoryManage.vue'),
         meta: { title: '分类管理', roles: ['ADMIN'] },
       },
+      {
+        path: 'orders',
+        name: 'orders',
+        component: () => import('@/views/order/OrderList.vue'),
+        meta: { title: '订单管理', roles: ['ADMIN', 'MERCHANT'] },
+      },
     ],
   },
   { path: '/:pathMatch(.*)*', redirect: '/dashboard' },

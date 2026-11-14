@@ -32,8 +32,8 @@ async function handleLogout() {
           <el-menu-item index="/goods">商品列表</el-menu-item>
           <el-menu-item v-if="user.isAdmin" index="/categories">分类管理</el-menu-item>
         </el-sub-menu>
-        <el-menu-item disabled>
-          <el-icon><Tickets /></el-icon>订单管理（M2）
+        <el-menu-item index="/orders">
+          <el-icon><Tickets /></el-icon>订单管理
         </el-menu-item>
         <el-menu-item disabled>
           <el-icon><Discount /></el-icon>优惠券管理（M3）
